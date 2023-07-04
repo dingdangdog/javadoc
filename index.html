@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Javadoc - oldmoon.top</title>
+	<link rel="shortcut icon" href="./java.png">
+	<meta charset="utf-8" />
+	<meta name="description" content="Java官网DOC文档|JavaFX8|JavaSE8|JDK8|JDK11|JDK17|JDK20">
+	<meta name="keywords" content="JavaDOC,Java官网文档,JavaFX8,JavaSE8,JDK8,JDK11,JDK17,JDK20,oldmoon,dingdangdog">
+	<meta name="author" content="dingdangdog">
+	
+	<style type="text/css">
+		body {
+			margin: 0;
+			background-color: #f2f2f2;
+		}
+		
+		.title{
+		
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			
+			height: 5rem;
+		}
+		.container{
+			padding: 5rem;
+		}
+		.buttons{
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 5rem;
+			margin: 0;
+		}
+		
+		button {
+			background-color: #b3d9ff;
+			color: #333;
+			border: none;
+			border-radius: 10px;
+			padding: 15px 30px;
+			margin: 10px;
+			width:15rem;
+			font-size: 18px;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
+
+		button:hover {
+			background-color: #e49a9a;
+		}
+	</style>
+</head>
+<body>
+	<div class="title">
+		<h1>JAVADOC</h1>
+	</div>
+	<div class="container">
+		<div class="buttons">
+			<button onclick="openIn('./jdk-8u371/index.html')">jdk-8u371</button>
+			<button onclick="openIn('./jdk-8u371/api/index.html')">javaSE-8u371</button>
+			<button onclick="openIn('./javafx-8u371/index.html')">javaFX-8u371</button>
+		</div>
+		<div class="buttons">
+			<button onclick="openIn('./jdk-11.0.19/index.html')">jdk-11.0.19</button>
+			<button onclick="openIn('./jdk-17.0.7/index.html')">jdk-17.0.7</button>
+			<button onclick="openIn('./jdk-20.0.1/index.html')">jdk-20.0.1</button>
+		</div>
+	</div>
+</body>
+
+	<script>
+		function openIn(uri) {
+			window.open(uri);
+		}
+	</script>
+</html>
