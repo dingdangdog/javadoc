@@ -78,3 +78,50 @@ This code repository does not provide Java document content. You can visit the w
 | jdk.security.jgss     | jdk.security.jgss     | jdk.security.jgss        |
 | jdk.xml.dom           | jdk.xml.dom           | jdk.xml.dom              |
 | jdk.zipfs             | jdk.zipfs             | jdk.zipfs                |
+
+#### JDK11 only
+
+- jdk.pack
+
+> Defines tools for transforming a JAR file into a compressed pack200 file and transforming a packed file into a JAR file, including the *pack200* and *unpack200* tools.
+
+> 定义用于将JAR文件转换为压缩的pack200文件和将打包文件转换为JAR文件的工具，包括pack200和unpack200工具。
+
+- jdk.rmic
+
+> Defines the *rmic* compiler for generating stubs and skeletons using the Java Remote Method Protocol (JRMP) for remote objects.
+
+> 定义 rmic 编译器，用于使用远程对象的 Java 远程方法协议 (JRMP) 生成存根和骨架。
+
+- jdk.scripting.nashorn
+
+> Provides the implementation of Nashorn script engine and the runtime environment for programs written in ECMAScript 5.1.
+
+> 提供Nashorn脚本引擎的实现以及ECMAScript 5.1编写的程序的运行时环境。
+
+#### JDK17 only
+
+- jdk.incubator.foreign
+
+> Defines an API for accessing foreign memory and calling foreign functions, directly from Java.
+
+> 定义了一个 API，用于直接从 Java 访问外部内存和调用外部函数。
+
+- jdk.incubator.vector
+
+> Defines an API for expressing computations that can be reliably compiled at runtime into SIMD instructions, such as AVX instructions on x64, and NEON instructions on AArch64.
+
+> 定义一个用于表达计算的 API，这些计算可以在运行时可靠地编译为 SIMD 指令，例如 x64 上的 AVX 指令和 AArch64 上的 NEON 指令
+
+- jdk.jpackage
+
+> Defines the Java Packaging tool, jpackage.
+
+> 定义 Java 打包工具 jpackage。
+
+-   jdk.nio.mapmode
+
+> Defines JDK-specific file mapping modes.
+
+> 定义 JDK 特定的文件映射模式。
+
