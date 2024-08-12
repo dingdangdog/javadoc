@@ -1,108 +1,142 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Javadoc - Java official document,Java官方文档,JavaFX8,JavaSE8,JDK8,JDK11,JDK17,JDK20</title>
-    <link rel="shortcut icon" href="./java.png">
+  <head>
+    <title>
+      Javadoc - Java official document,Java官方文档,JavaFX8,JavaSE8,JDK8,JDK11,JDK17,JDK20,JDK21,JDK22
+    </title>
+    <link rel="shortcut icon" href="./java.png" />
     <meta charset="utf-8" />
-    <meta name="description" content="Java official document|Java官方文档|JavaFX8|JavaSE8|JDK8|JDK11|JDK17|JDK20">
-    <meta name="keywords" content="Java official document,JavaDOC,Java官网文档,JavaFX8,JavaSE8,JDK8,JDK11,JDK17,JDK20,oldmoon.top,dingdangdog">
-    <meta name="author" content="dingdangdog">
-    
+    <meta
+      name="description"
+      content="Java official document,Java官方文档,JavaFX8 document,JavaSE8 document,JDK8 document,JDK11 document,JDK17 document,JDK20 document,JDK21 document,JDK22 document"
+    />
+    <meta
+      name="keywords"
+      content="Java official document,JavaDOC,Java官网文档,JavaFX8 document,JavaSE8 document,JDK8 document,JDK11 document,JDK17 document,JDK20 document,JDK21 document,JDK22 document,oldmoon.top,dingdangdog"
+    />
+    <meta name="author" content="dingdangdog" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <style type="text/css">
-        body {
-            margin: 0;
-            background-color: #f2f2f2;
+      body {
+        margin: 0;
+        background-color: #f2f2f2;
+      }
+
+      .title {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        height: 5rem;
+      }
+      #icon-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 999;
+      }
+      .icon {
+        width: 2rem;
+        height: 2rem;
+      }
+
+      button:hover {
+        background-color: #e49a9a;
+      }
+
+      .buttons {
+        padding: 5rem 10rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      button {
+        width: 20vw;
+        padding: 1rem;
+        margin: 0.5rem 1rem;
+        font-size: 18px;
+
+        background-color: #b3d9ff;
+        color: #333;
+        border: none;
+        border-radius: 10px;
+        font-size: 18px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      @media screen and (max-width: 1080px) {
+        .buttons {
+          padding: 2rem;
         }
-        
-        .title{
-        
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            
-            height: 5rem;
-        }
-        .container{
-            padding: 5rem;
-        }
-        .buttons{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0;
-        }
-        
         button {
-            background-color: #b3d9ff;
-            color: #333;
-            border: none;
-            border-radius: 10px;
-            padding: 15px 30px;
-            margin: 10px;
-            font-size: 18px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            max-width: 100%; /* 设置按钮最大宽度为100% */
+          width: 40vw;
         }
+      }
 
-        button:hover {
-            background-color: #e49a9a;
+      @media screen and (max-width: 720px) {
+        .buttons {
+          padding: 1rem;
         }
-        
-        #icon-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 999;
+        button {
+          width: 80vw;
         }
-        .icon {
-            width: 2rem;
-            height: 2rem;
-        }
-
-        /* 媒体查询：当浏览器宽度小于等于768px时 */
-        @media screen and (max-width: 768px) {
-            .buttons {
-                flex-wrap: wrap; /* 换行 */
-            }
-
-            button {
-                width: calc(50% - 20px); /* 计算按钮宽度，使其每行显示两个按钮 */
-            }
-        }
-
-        /* 媒体查询：当浏览器宽度小于等于480px时 */
-        @media screen and (max-width: 480px) {
-            button {
-                width: calc(100% - 20px); /* 计算按钮宽度，使其每行显示一个按钮 */
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div id="icon-container">
-        <a href="https://github.com/dingdangdog/javadoc" target="_blank" rel="noreferrer"><svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2747" width="200" height="200"><path d="M512 12.63616c-282.74688 0-512 229.21216-512 512 0 226.22208 146.69824 418.14016 350.12608 485.82656 25.57952 4.73088 35.00032-11.10016 35.00032-24.63744 0-12.20608-0.47104-52.55168-0.69632-95.31392-142.4384 30.96576-172.50304-60.416-172.50304-60.416-23.28576-59.16672-56.85248-74.91584-56.85248-74.91584-46.44864-31.78496 3.50208-31.1296 3.50208-31.1296 51.4048 3.60448 78.47936 52.75648 78.47936 52.75648 45.6704 78.27456 119.76704 55.64416 149.01248 42.55744 4.58752-33.09568 17.85856-55.68512 32.50176-68.46464-113.72544-12.94336-233.2672-56.85248-233.2672-253.0304 0-55.88992 20.00896-101.5808 52.75648-137.4208-5.3248-12.9024-22.85568-64.96256 4.95616-135.49568 0 0 43.008-13.74208 140.84096 52.49024 40.83712-11.34592 84.64384-17.03936 128.16384-17.24416 43.49952 0.2048 87.32672 5.87776 128.24576 17.24416 97.73056-66.2528 140.65664-52.49024 140.65664-52.49024 27.87328 70.53312 10.3424 122.59328 5.03808 135.49568 32.82944 35.86048 52.69504 81.53088 52.69504 137.4208 0 196.64896-119.78752 239.94368-233.79968 252.6208 18.37056 15.89248 34.73408 47.04256 34.73408 94.80192 0 68.5056-0.59392 123.63776-0.59392 140.51328 0 13.6192 9.216 29.5936 35.16416 24.576 203.32544-67.76832 349.83936-259.62496 349.83936-485.76512 0-282.78784-229.23264-512-512-512z" p-id="2748"></path></svg></a>
+      <a
+        href="https://github.com/dingdangdog/javadoc"
+        target="_blank"
+        rel="noreferrer"
+        ><svg
+          class="icon"
+          viewBox="0 0 1024 1024"
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+          p-id="2747"
+          width="200"
+          height="200"
+        >
+          <path
+            d="M512 12.63616c-282.74688 0-512 229.21216-512 512 0 226.22208 146.69824 418.14016 350.12608 485.82656 25.57952 4.73088 35.00032-11.10016 35.00032-24.63744 0-12.20608-0.47104-52.55168-0.69632-95.31392-142.4384 30.96576-172.50304-60.416-172.50304-60.416-23.28576-59.16672-56.85248-74.91584-56.85248-74.91584-46.44864-31.78496 3.50208-31.1296 3.50208-31.1296 51.4048 3.60448 78.47936 52.75648 78.47936 52.75648 45.6704 78.27456 119.76704 55.64416 149.01248 42.55744 4.58752-33.09568 17.85856-55.68512 32.50176-68.46464-113.72544-12.94336-233.2672-56.85248-233.2672-253.0304 0-55.88992 20.00896-101.5808 52.75648-137.4208-5.3248-12.9024-22.85568-64.96256 4.95616-135.49568 0 0 43.008-13.74208 140.84096 52.49024 40.83712-11.34592 84.64384-17.03936 128.16384-17.24416 43.49952 0.2048 87.32672 5.87776 128.24576 17.24416 97.73056-66.2528 140.65664-52.49024 140.65664-52.49024 27.87328 70.53312 10.3424 122.59328 5.03808 135.49568 32.82944 35.86048 52.69504 81.53088 52.69504 137.4208 0 196.64896-119.78752 239.94368-233.79968 252.6208 18.37056 15.89248 34.73408 47.04256 34.73408 94.80192 0 68.5056-0.59392 123.63776-0.59392 140.51328 0 13.6192 9.216 29.5936 35.16416 24.576 203.32544-67.76832 349.83936-259.62496 349.83936-485.76512 0-282.78784-229.23264-512-512-512z"
+            p-id="2748"
+          ></path>
+        </svg>
+      </a>
     </div>
     <div class="title">
-        <h1>JAVADOC</h1>
+      <h1>JAVADOC</h1>
     </div>
     <div class="container">
-        <div class="buttons">
-            <button onclick="openIn('./jdk-8u371/index.html')">jdk-8u371</button>
-            <button onclick="openIn('./jdk-8u371/api/index.html')">javaSE-8u371</button>
-            <button onclick="openIn('./javafx-8u371/index.html')">javaFX-8u371</button>
-        </div>
-        <div class="buttons">
-            <button onclick="openIn('./jdk-11.0.19/index.html')">jdk-11.0.19</button>
-            <button onclick="openIn('./jdk-17.0.7/index.html')">jdk-17.0.7</button>
-            <button onclick="openIn('./jdk-20.0.1/index.html')">jdk-20.0.1</button>
-        </div>
+      <div class="buttons">
+        <button onclick="openIn('./jdk-8u371/index.html')">jdk-8u371</button>
+        <button onclick="openIn('./jdk-8u371/api/index.html')">
+          javaSE-8u371
+        </button>
+        <button onclick="openIn('./javafx-8u371/index.html')">
+          javaFX-8u371
+        </button>
+        <button onclick="openIn('./jdk-11.0.19/index.html')">
+          jdk-11.0.19
+        </button>
+        <button onclick="openIn('./jdk-17.0.7/index.html')">jdk-17.0.7</button>
+        <button onclick="openIn('./jdk-17.0.12/index.html')">
+          jdk-17.0.12
+        </button>
+        <button onclick="openIn('./jdk-20.0.1/index.html')">jdk-20.0.1</button>
+        <button onclick="openIn('./jdk-21.0.4/index.html')">jdk-21.0.4</button>
+        <button onclick="openIn('./jdk-22.0.2/index.html')">jdk-22.0.2</button>
+      </div>
     </div>
-</body>
+  </body>
 
-    <script>
-        function openIn(uri) {
-            window.open(uri);
-        }
-    </script>
+  <script>
+    function openIn(uri) {
+      window.open(uri);
+    }
+  </script>
 </html>
