@@ -1,0 +1,2867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc,fixuphtml" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Statements before super(...) (Preview)</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="../resources/jdk-default.css" />
+  <link rel="stylesheet" href="../resources/spec-changes.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+
+<header id="title-block-header">
+<div class="navbar"><div><strong>Java SE 22 & JDK 22</strong></div><nav><ul><li><a href="../api/index.html">API</a>
+<li><a href="index.html">OTHER SPECIFICATIONS</a>
+<li><a href="man/index.html">TOOL GUIDES</a></ul></nav></div>
+
+<h1 class="title">Statements before <code>super(...)</code>
+(Preview)</h1>
+<p class="subtitle">Changes to the Java® Language Specification •
+Version 22.0.2+9-70</p>
+</header>
+<nav id="TOC" role="doc-toc" title="Table Of Contents">
+<ul>
+<li><a href="#jls-6" id="toc-jls-6">Chapter 6: Names</a>
+<ul>
+<li><a href="#jls-6.5" id="toc-jls-6.5">6.5 Determining the Meaning of a
+Name</a>
+<ul>
+<li><a href="#jls-6.5.6" id="toc-jls-6.5.6">6.5.6 Meaning of Expression
+Names</a>
+<ul>
+<li><a href="#jls-6.5.6.1" id="toc-jls-6.5.6.1">6.5.6.1 Simple
+Expression Names</a></li>
+</ul></li>
+<li><a href="#jls-6.5.7" id="toc-jls-6.5.7">6.5.7 Meaning of Method
+Names</a>
+<ul>
+<li><a href="#jls-6.5.7.1" id="toc-jls-6.5.7.1">6.5.7.1 Simple Method
+Names</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><a href="#jls-8" id="toc-jls-8">Chapter 8: Classes</a>
+<ul>
+<li><a href="#jls-8.1" id="toc-jls-8.1">8.1 Class Declarations</a>
+<ul>
+<li><a href="#jls-8.1.3" id="toc-jls-8.1.3">8.1.3 Inner Classes and
+Enclosing Instances</a></li>
+</ul></li>
+<li><a href="#jls-8.8" id="toc-jls-8.8">8.8 Constructor Declarations</a>
+<ul>
+<li><a href="#jls-8.8.7" id="toc-jls-8.8.7">8.8.7 Constructor Body</a>
+<ul>
+<li><a href="#jls-8.8.7.1" id="toc-jls-8.8.7.1">8.8.7.1 Explicit
+Constructor Invocations</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#jls-8.10" id="toc-jls-8.10">8.10 Record Classes</a>
+<ul>
+<li><a href="#jls-8.10.4" id="toc-jls-8.10.4">8.10.4 Record Constructor
+Declarations</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#jls-11" id="toc-jls-11">Chapter 11: Exceptions</a>
+<ul>
+<li><a href="#jls-11.2" id="toc-jls-11.2">11.2 Compile-Time Checking of
+Exceptions</a>
+<ul>
+<li><a href="#jls-11.2.2" id="toc-jls-11.2.2">11.2.2 Exception Analysis
+of Statements <strong>and Explicit Constructor
+Invocations</strong></a></li>
+</ul></li>
+</ul></li>
+<li><a href="#jls-12" id="toc-jls-12">Chapter 12: Execution</a>
+<ul>
+<li><a href="#jls-12.5" id="toc-jls-12.5">12.5 Creation of New Class
+Instances</a></li>
+</ul></li>
+<li><a href="#jls-14" id="toc-jls-14">Chapter 14: Blocks, Statements,
+and Patterns</a>
+<ul>
+<li><a href="#jls-14.22" id="toc-jls-14.22">14.22 Unreachable
+Statements</a></li>
+</ul></li>
+<li><a href="#jls-15" id="toc-jls-15">Chapter 15: Expressions</a>
+<ul>
+<li><a href="#jls-15.8" id="toc-jls-15.8">15.8 Primary Expressions</a>
+<ul>
+<li><a href="#jls-15.8.3" id="toc-jls-15.8.3">15.8.3
+<code>this</code></a></li>
+<li><a href="#jls-15.8.4" id="toc-jls-15.8.4">15.8.4 Qualified
+<code>this</code></a></li>
+</ul></li>
+<li><a href="#jls-15.9" id="toc-jls-15.9">15.9 Class Instance Creation
+Expressions</a>
+<ul>
+<li><a href="#jls-15.9.2" id="toc-jls-15.9.2">15.9.2 Determining
+Enclosing Instances</a></li>
+</ul></li>
+<li><a href="#jls-15.11" id="toc-jls-15.11">15.11 Field Access
+Expressions</a>
+<ul>
+<li><a href="#jls-15.11.2" id="toc-jls-15.11.2">15.11.2 Accessing
+Superclass Members using <code>super</code></a></li>
+</ul></li>
+<li><a href="#jls-15.12" id="toc-jls-15.12">15.12 Method Invocation
+Expressions</a>
+<ul>
+<li><a href="#jls-15.12.3" id="toc-jls-15.12.3">15.12.3 Compile-Time
+Step 3: Is the Chosen Method Appropriate?</a></li>
+</ul></li>
+<li><a href="#jls-15.13" id="toc-jls-15.13">15.13 Method Reference
+Expressions</a>
+<ul>
+<li><a href="#jls-15.13.1" id="toc-jls-15.13.1">15.13.1 Compile-Time
+Declaration of a Method Reference</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+<main><p>This document describes changes to the <a
+href="https://docs.oracle.com/javase/specs/jls/se21/html">Java Language Specification</a>
+to support <em>Statements before <code>super(...)</code></em>, which is
+a proposed feature of Java SE 22. See <a
+href="https://openjdk.org/jeps/447">JEP 447</a> for an overview of the
+feature.</p>
+<p>Changes are described with respect to existing sections of the JLS.
+New text is indicated <strong>like this</strong> and deleted text is
+indicated <del>like this</del>. Explanation and discussion, as needed,
+is set aside in grey boxes.</p>
+<div class="editorial">
+<p>Changelog:</p>
+<p>2023-09-27: Added missing treatment of class instance creation
+expressions (<code>new</code>) and other corrections and editorial
+improvements.</p>
+<p>2023-06-20: Improved description of constructor execution (<a
+href="#jls-12.5">12.5</a>) and other editorial improvements.</p>
+<p>2023-05-09: Minor update:</p>
+<ul>
+<li>(<a href="#jls-8.8.7">8.8.7</a>): Introduced new terminology for
+constructor bodies with an explicit constructor invocation
+("epilogue").</li>
+<li>(<a href="#jls-8.8.7.1">8.8.7.1</a>): Replaced "pre-initialization
+context" with "pre-construction context"</li>
+<li>(<a href="#jls-14.22">14.22</a>): Added missing treatment of
+reachability of constructor bodies.</li>
+</ul>
+<p>2023-04-20: First draft</p>
+</div>
+<h2 id="jls-6">Chapter 6: Names</h2>
+<h3 id="jls-6.5">6.5 Determining the Meaning of a Name</h3>
+<h4 id="jls-6.5.6">6.5.6 Meaning of Expression Names</h4>
+<h5 id="jls-6.5.6.1">6.5.6.1 Simple Expression Names</h5>
+<p>If an expression name consists of a single <em>Identifier</em>, then
+there must be exactly one declaration denoting either a local variable,
+formal parameter, exception parameter, or field in scope at the point at
+which the identifier occurs. Otherwise, a compile-time error occurs.</p>
+<p>If the declaration denotes an instance variable of a class <em>C</em>
+(<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.3.1.1">8.3.1.1</a>),
+then both of the following must be true, or a compile-time error
+occurs:</p>
+<ul>
+<li><p>The expression name does not occur in a static context (<a
+href="#jls-8.1.3">8.1.3</a>)<strong>, or in a pre-construction context
+of <em>C</em> (<a href="#jls-8.8.7.1">8.8.7.1</a>)</strong>.</p></li>
+<li><p>If the expression name appears in a nested class or interface
+declaration of <em>C</em>, then the immediately enclosing class or
+interface declaration of the expression name is an inner class of
+<em>C</em>.</p></li>
+</ul>
+<blockquote>
+<p>For example, the expression name must not appear in the body of a
+<code>static</code> method declared by <em>C</em>, nor in the body of an
+instance method of a <code>static</code> class nested within C.</p>
+</blockquote>
+<p>If the declaration denotes a local variable, formal parameter, or
+exception parameter, let <em>X</em> be the innermost method declaration,
+constructor declaration, instance initializer, static initializer, field
+declaration, or explicit constructor invocation <del>statement</del>
+which encloses the local variable or parameter declaration. If the
+expression name appears directly or indirectly in the body of a local
+class, local interface, or anonymous class <em>D</em> declared directly
+in <em>X</em>, then both of the following must be true, or a
+compile-time error occurs:</p>
+<ul>
+<li><p>The expression name does not occur in a static context.</p></li>
+<li><p><em>D</em> is an inner class, and the immediately enclosing class
+or interface declaration of the expression name is <em>D</em> or an
+inner class of <em>D</em>.</p></li>
+</ul>
+<blockquote>
+<p>For example, the expression name must not appear in the body of a
+<code>static</code> method declared by <em>D</em>, nor (if <em>D</em> is
+a local interface) in the body of a default method of <em>D</em>.</p>
+</blockquote>
+<p>If the declaration denotes a local variable, formal parameter, or
+exception parameter that is neither <code>final</code> nor effectively
+final (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-4.html#jls-4.12.4">4.12.4</a>),
+it is a compile-time error if the expression name appears either in an
+inner class enclosed directly or indirectly by <em>X</em>, or in a
+lambda expression contained by <em>X</em> (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.27">15.27</a>).</p>
+<blockquote>
+<p>The net effect of these rules is that a local variable, formal
+parameter, or exception parameter can only be referenced from a nested
+class or interface declared within its scope if (i) the reference is not
+within a static context, (ii) there is a chain of inner
+(non-<code>static</code>) classes from the reference to the variable
+declaration, and (iii) the variable is <code>final</code> or effectively
+final. References from lambda expressions also require the variable to
+be <code>final</code> or effectively final.</p>
+</blockquote>
+<p>If the declaration declares a <code>final</code> variable which is
+definitely assigned before the simple expression, the meaning of the
+name is the value of that variable. Otherwise, the meaning of the
+expression name is the variable declared by the declaration.</p>
+<p>If the expression name appears in an assignment context, invocation
+context, or casting context, then the type of the expression name is the
+declared type of the field, local variable, or parameter after capture
+conversion (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-5.html#jls-5.1.10">5.1.10</a>).</p>
+<p>Otherwise, the type of the expression name is the declared type of
+the field, local variable or parameter.</p>
+<blockquote>
+<p>That is, if the expression name appears "on the right hand side", its
+type is subject to capture conversion. If the expression name is a
+variable that appears "on the left hand side", its type is not subject
+to capture conversion.</p>
+</blockquote>
+<div class="example">
+<p>Example 6.5.6.1-1. Simple Expression Names</p>
+<pre><code>class Test {
+    static int v;
+    static final int f = 3;
+    public static void main(String[] args) {
+        int i;
+        i = 1;
+        v = 2;
+        f = 33;  // compile-time error
+        System.out.println(i + &quot; &quot; + v + &quot; &quot; + f);
+    }
+}</code></pre>
+<p>In this program, the names used as the left-hand-sides in the
+assignments to <code>i</code>, <code>v</code>, and <code>f</code> denote
+the local variable <code>i</code>, the field <code>v</code>, and the
+value of <code>f</code> (not the variable <code>f</code>, because
+<code>f</code> is a <code>final</code> variable). The example therefore
+produces an error at compile time because the last assignment does not
+have a variable as its left-hand side. If the erroneous assignment is
+removed, the modified code can be compiled and it will produce the
+output:</p>
+<pre><code>1 2 3</code></pre>
+</div>
+<div class="example">
+<p>Example 6.5.6.1-2. References to Instance Variables</p>
+<pre><code>class Test {
+    static String a;
+    String b;
+
+    String concat1() {
+        return a + b;
+    }
+
+    static String concat2() {
+        return a + b;  // compile-time error
+    }
+
+    int index() {
+        interface I {
+            class Matcher {
+                void check() {
+                    if (a == null ||
+                        b == null) {  // compile-time error
+                        throw new IllegalArgumentException();
+                    }
+                }
+                int match(String s, String t) {
+                    return s.indexOf(t);
+                }
+            }
+    }
+
+    I.Matcher matcher = new I.Matcher();
+    matcher.check();
+    return matcher.match(a, b);
+    }
+}</code></pre>
+<p>The fields <code>a</code> and <code>b</code> are in scope throughout
+the body of class <code>Test</code>. However, using the name
+<code>b</code> in the static context of the <code>concat2</code> method,
+or in the declaration of the nested class <code>Matcher</code> that is
+not an inner class of <code>Test</code>, is illegal.</p>
+</div>
+<div class="example">
+<p>Example 6.5.6.1-3. References to Local Variables and Formal
+Parameters</p>
+<pre><code>class Test {
+    public static void main(String[] args) {
+        String first = args[0];
+
+        class Checker {
+            void checkWhitespace(int x) {
+                String arg = args[x];
+                if (!arg.trim().equals(arg)) {
+                    throw new IllegalArgumentException();
+                }
+            }
+
+            static void checkFlag(int x) {
+                String arg = args[x];  // compile-time error
+                if (!arg.startsWith(&quot;-&quot;)) {
+                    throw new IllegalArgumentException();
+                }
+            }
+
+            static void checkFirst() {
+                Runnable r = new Runnable() {
+                    public void run() {
+                        if (first == null) {  // compile-time error
+                            throw new IllegalArgumentException();
+                        }
+                    }
+                };
+                r.run();
+            }
+        }
+
+        final Checker c = new Checker();
+        c.checkFirst();
+        for (int i = 1; i &lt; args.length; i++) {
+            Runnable r = () -&gt; {
+                c.checkWhitespace(i);  // compile-time error
+                c.checkFlag(i);  // compile-time error
+            };
+        }
+    }
+}</code></pre>
+<p>The formal parameter <code>args</code> is in scope throughout the
+body of method <code>main</code>. <code>args</code> is effectively
+final, so the name <code>args</code> can be used in the instance method
+<code>checkWhitespace</code> of local class <code>Checker</code>.
+However, using the name <code>args</code> in the static context of the
+<code>checkFlag</code> method of local class <code>Checker</code> is
+illegal.</p>
+<p>The local variable <code>first</code> is in scope for the remainder
+of the body of method <code>main</code>. <code>first</code> is also
+effectively final. However, the anonymous class declared in
+<code>checkFirst</code> is not an inner class of <code>Checker</code>,
+so using the name <code>first</code> in the anonymous class body is
+illegal. (A lambda expression in the body of <code>checkFirst</code>
+would similarly be unable to refer to <code>first</code>, because the
+lambda expression would occur in a static context.)</p>
+<p>The local variable <code>c</code> is in scope for the last few lines
+of the body of method <code>main</code>, and is declared
+<code>final</code>, so the name <code>c</code> can be used in the body
+of the lambda expression.</p>
+<p>The local variable <code>i</code> is in scope throughout the
+<code>for</code> loop. However, <code>i</code> is not effectively final,
+so using the name <code>i</code> in the body of the lambda expression is
+illegal.</p>
+</div>
+<h4 id="jls-6.5.7">6.5.7 Meaning of Method Names</h4>
+<h5 id="jls-6.5.7.1">6.5.7.1 Simple Method Names</h5>
+<p>A simple method name appears in the context of a method invocation
+expression (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12">15.12</a>).
+The simple method name consists of a single
+<em>UnqualifiedMethodIdentifier</em> which specifies the name of the
+method to be invoked. The rules of method invocation require that the
+<em>UnqualifiedMethodIdentifier</em> denotes a method that is in scope
+at the point of the method invocation. <del>The rules also prohibit (<a
+href="#jls-15.12.3">15.12.3</a>) a reference to an instance method
+occurring in a static context (<a href="#jls-8.1.3">8.1.3</a>), or in a
+nested class or interface other than an inner class of the class or
+interface which declares the instance method.</del> <strong>The rules
+(<a href="#jls-15.12.3">15.12.3</a>) also prohibit a reference to an
+instance method occurring in any one of the following:</strong></p>
+<div class="inserted">
+<ol type="1">
+<li><p>a static context (<a href="#jls-8.1.3">8.1.3</a>),</p></li>
+<li><p>a nested class or interface other than an inner class of the
+innermost class or interface of which the instance method is a member,
+or</p></li>
+<li><p>a pre-construction context (<a href="#jls-8.8.7.1">8.8.7.1</a>)
+of a class where the instance method is a member.</p></li>
+</ol>
+</div>
+<div class="editorial">
+<p>Editorial Note: The struck-out sentence above offered an incorrect
+summary of the rules appearing in (<a href="#jls-15.12.3">15.12.3</a>).
+Whilst it correctly asserted that the following is prohibited:</p>
+<pre><code>class T {
+    void foo() { ... }
+    static class Mid {
+        class L {
+            ... foo() ... // Compile-time error as L is not an inner class of T
+        }
+    }
+}</code></pre>
+<p>It suggested that the following code is not allowed by the rules in
+(<a href="#jls-15.12.3">15.12.3</a>), although it is.</p>
+<pre><code>class B {
+    void foo() { ... }
+}
+class T extends B {
+    class Mid {
+        class L {
+            ... foo() ... // No compile-time error even though L is not an inner class of B
+        }
+    }
+ }</code></pre>
+</div>
+<div class="example">
+<p>Example 6.5.7.1-1. Simple Method Names</p>
+<p>The following program demonstrates the role of scoping when
+determining which method to invoke.</p>
+<pre><code>class Super {
+    void f2(String s)       {}
+    void f3(String s)       {}
+    void f3(int i1, int i2) {}
+}
+
+class Test {
+    void f1(int i) {}
+    void f2(int i) {}
+    void f3(int i) {}
+
+    void m() {
+        new Super() {
+            {
+                f1(0);  // OK, resolves to Test.f1(int)
+                f2(0);  // compile-time error
+                f3(0);  // compile-time error
+            }
+        };
+    }
+}</code></pre>
+<p>For the invocation <code>f1(0)</code>, only one method named
+<code>f1</code> is in scope. It is the method <code>Test.f1(int)</code>,
+whose declaration is in scope throughout the body of <code>Test</code>
+including the anonymous class declaration. <a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12.1">15.12.1</a>
+chooses to search in class <code>Test</code> since the anonymous class
+declaration has no member named <code>f1</code>. Eventually,
+<code>Test.f1(int)</code> is resolved.</p>
+<p>For the invocation <code>f2(0)</code>, two methods named
+<code>f2</code> are in scope. First, the declaration of the method
+<code>Super.f2(String)</code> is in scope throughout the anonymous class
+declaration. Second, the declaration of the method
+<code>Test.f2(int)</code> is in scope throughout the body of
+<code>Test</code> including the anonymous class declaration. (Note that
+neither declaration shadows the other, because at the point where each
+is declared, the other is not in scope.) <a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12.1">15.12.1</a>
+chooses to search in class <code>Super</code> because it has a member
+named <code>f2</code>. However, <code>Super.f2(String)</code> is not
+applicable to <code>f2(0)</code>, so a compile-time error occurs. Note
+that class <code>Test</code> is not searched.</p>
+<p>For the invocation <code>f3(0)</code>, three methods named
+<code>f3</code> are in scope. First and second, the declarations of the
+methods <code>Super.f3(String)</code> and <code>Super.f3(int,int)</code>
+are in scope throughout the anonymous class declaration. Third, the
+declaration of the method <code>Test.f3(int)</code> is in scope
+throughout the body of <code>Test</code> including the anonymous class
+declaration. <a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12.1">15.12.1</a>
+chooses to search in class <code>Super</code> because it has a member
+named <code>f3</code>. However, <code>Super.f3(String)</code> and
+<code>Super.f3(int,int)</code> are not applicable to <code>f3(0)</code>,
+so a compile-time error occurs. Note that class <code>Test</code> is not
+searched.</p>
+<p>Choosing to search a nested class's superclass hierarchy before the
+lexically enclosing scope is called the "comb rule" (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12.1">15.12.1</a>).</p>
+</div>
+<h2 id="jls-8">Chapter 8: Classes</h2>
+<p>A class declaration defines a new class and describes how it is
+implemented (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.1">8.1</a>).</p>
+<p>A <em>top level class</em> (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-6.html#jls-7.6">7.6</a>)
+is a class declared directly in a compilation unit.</p>
+<p>A <em>nested class</em> is any class whose declaration occurs within
+the body of another class or interface declaration. A nested class may
+be a member class (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.5">8.5</a>,
+<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-9.html#jls-9.5">9.5</a>),
+a local class (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-14.html#jls-14.3">14.3</a>),
+or an anonymous class (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.9.5">15.9.5</a>).</p>
+<p><del>Some kinds of nested class are an <em>inner class</em> (<a
+href="#jls-8.1.3">8.1.3</a>), which is a class that can refer to
+enclosing class instances, local variables, and type
+variables.</del></p>
+<div class="inserted">
+<p>A nested class may be <em>inner</em> (<a
+href="#jls-8.1.3">8.1.3</a>), in which case it may (depending on
+precisely where its declaration occurs) be able to refer to enclosing
+class instances, local variables, and type variables.</p>
+</div>
+<p>An <em>enum class</em> (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.9">8.9</a>)
+is a class declared with abbreviated syntax that defines a small set of
+named class instances.</p>
+<p>A <em>record class</em> (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.10">8.10</a>)
+is a class declared with abbreviated syntax that defines a simple
+aggregate of values.</p>
+<p>This chapter discusses the common semantics of all classes. Details
+that are specific to particular kinds of classes are discussed in the
+sections dedicated to these constructs.</p>
+<p>A class may be declared <code>public</code> (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.1.1">8.1.1</a>)
+so it can be referred to from code in any package of its module and
+potentially from code in other modules.</p>
+<p>A class may be declared <code>abstract</code> (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.1.1.1">8.1.1.1</a>),
+and must be declared <code>abstract</code> if it is incompletely
+implemented; such a class cannot be instantiated, but can be extended by
+subclasses. The degree to which a class can be extended can be
+controlled explicitly (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.1.1.2">8.1.1.2</a>):
+it may be declared <code>sealed</code> to limit its subclasses, or it
+may be declared <code>final</code> to ensure no subclasses. Each class
+except <code>Object</code> is an extension of (that is, a subclass of) a
+single existing class (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.1.4">8.1.4</a>)
+and may implement interfaces (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.1.5">8.1.5</a>).</p>
+<p>A class may be <em>generic</em> (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.1.2">8.1.2</a>),
+that is, its declaration may introduce type variables whose bindings
+differ among different instances of the class.</p>
+<p>Class declarations may be decorated with annotations (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-9.html#jls-9.7">9.7</a>)
+just like any other kind of declaration.</p>
+<p>The body of a class declares members (fields, methods, classes, and
+interfaces), instance and static initializers, and constructors (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.1.7">8.1.7</a>).
+The scope (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-6.html#jls-6.3">6.3</a>)
+of a member (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.2">8.2</a>)
+is the entire body of the declaration of the class to which the member
+belongs. Field, method, member class, member interface, and constructor
+declarations may include the access modifiers <code>public</code>,
+<code>protected</code>, or <code>private</code> (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-6.html#jls-6.6">6.6</a>).
+The members of a class include both declared and inherited members (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.2">8.2</a>).
+Newly declared fields can hide fields declared in a superclass or
+superinterface. Newly declared member classes and member interfaces can
+hide member classes and member interfaces declared in a superclass or
+superinterface. Newly declared methods can hide, implement, or override
+methods declared in a superclass or superinterface.</p>
+<p>Field declarations (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.3">8.3</a>)
+describe class variables, which are incarnated once, and instance
+variables, which are freshly incarnated for each instance of the class.
+A field may be declared <code>final</code> (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.3.1.2">8.3.1.2</a>),
+in which case it can be assigned to only once. Any field declaration may
+include an initializer.</p>
+<p>Member class declarations (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.5">8.5</a>)
+describe nested classes that are members of the surrounding class.
+Member classes may be <code>static</code>, in which case they have no
+access to the instance variables of the surrounding class; or they may
+be inner classes.</p>
+<p>Member interface declarations (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.5">8.5</a>)
+describe nested interfaces that are members of the surrounding
+class.</p>
+<p>Method declarations (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.4">8.4</a>)
+describe code that may be invoked by method invocation expressions (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12">15.12</a>).
+A class method is invoked relative to the class; an instance method is
+invoked with respect to some particular object that is an instance of a
+class. A method whose declaration does not indicate how it is
+implemented must be declared <code>abstract</code>. A method may be
+declared <code>final</code> (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.4.3.3">8.4.3.3</a>),
+in which case it cannot be hidden or overridden. A method may be
+implemented by platform-dependent <code>native</code> code (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.4.3.4">8.4.3.4</a>).
+A <code>synchronized</code> method (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.4.3.6">8.4.3.6</a>)
+automatically locks an object before executing its body and
+automatically unlocks the object on return, as if by use of a
+<code>synchronized</code> statement (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-14.html#jls-14.19">14.19</a>),
+thus allowing its activities to be synchronized with those of other
+threads (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-17.html">17</a>).</p>
+<p>Method names may be overloaded (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.4.9">8.4.9</a>).</p>
+<p>Instance initializers (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.6">8.6</a>)
+are blocks of executable code that may be used to help initialize an
+instance when it is created (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.9">15.9</a>).</p>
+<p>Static initializers (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.7">8.7</a>)
+are blocks of executable code that may be used to help initialize a
+class.</p>
+<p>Constructors (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.8">8.8</a>)
+are similar to methods, but cannot be invoked directly by a method call;
+they are used to initialize new class instances. Like methods, they may
+be overloaded (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.8.8">8.8.8</a>).</p>
+<h3 id="jls-8.1">8.1 Class Declarations</h3>
+<h4 id="jls-8.1.3">8.1.3 Inner Classes and Enclosing Instances</h4>
+<p>An <em>inner class</em> is a nested class that is not explicitly or
+implicitly <code>static</code>.</p>
+<p>An inner class is one of the following:</p>
+<ul>
+<li><p>a member class that is not explicitly or implicitly
+<code>static</code> (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.5">8.5</a>)</p></li>
+<li><p>a local class that is not implicitly <code>static</code> (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-14.html#jls-14.3">14.3</a>)</p></li>
+<li><p>an anonymous class (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.9.5">15.9.5</a>)</p></li>
+</ul>
+<p>The following nested classes are implicitly <code>static</code>, so
+are not inner classes:</p>
+<ul>
+<li>a member enum class (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.9">8.9</a>)</li>
+<li>a local enum class (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-14.html#jls-14.3">14.3</a>)</li>
+<li>a member record class (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.10">8.10</a>)</li>
+<li>a local record class (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-14.html#jls-14.3">14.3</a>)</li>
+<li>a member class of an interface (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-9.html#jls-9.5">9.5</a>)</li>
+</ul>
+<p>All of the rules that apply to nested classes apply to inner classes.
+In particular, an inner class may declare and inherit
+<code>static</code> members (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.2">8.2</a>),
+and declare static initializers (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.7">8.7</a>),
+even though the inner class itself is not <code>static</code>.</p>
+<blockquote>
+<p>There are no "inner interfaces" because every nested interface is
+implicitly <code>static</code> (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-9.html#jls-9.1.1.3">9.1.1.3</a>).</p>
+</blockquote>
+<div class="example">
+<p>Example 8.1.3-1. Inner Class Declarations and Static Members</p>
+<pre><code>class HasStatic {
+    static int j = 100;
+}
+
+class Outer {
+    class Inner extends HasStatic {
+        static {
+            System.out.println(&quot;Hello from Outer.Inner&quot;);
+        }
+
+        static       int x = 3;
+        static final int y = 4;
+
+        static void hello() {
+            System.out.println(&quot;Hello from Outer.Inner.hello&quot;);
+        }
+
+        static class VeryNestedButNotInner
+            extends NestedButNotInner {}
+    }
+
+    static class NestedButNotInner {
+        int z = Inner.x;
+    }
+
+    interface NeverInner {}  // Implicitly static, so never inner
+}</code></pre>
+<p>Prior to Java SE 16, an inner class could not declare static
+initializers, and could only declare <code>static</code> members that
+were constant variables (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-4.html#jls-4.12.4">4.12.4</a>).</p>
+</div>
+<p>A construct (statement, local variable declaration statement, local
+class declaration, local interface declaration, or expression)
+<em>occurs in a static context</em> if the innermost:</p>
+<ul>
+<li><p>method declaration,</p></li>
+<li><p>field declaration,</p></li>
+<li><p>constructor declaration,</p></li>
+<li><p>instance initializer, <strong>or</strong></p></li>
+<li><p>static initializer<del>, or</del></p></li>
+<li><p><del>explicit constructor invocation statement</del></p></li>
+</ul>
+<p>which encloses the construct is one of the following:</p>
+<ul>
+<li><p>a <code>static</code> method declaration (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.4.3.2">8.4.3.2</a>,
+<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-9.html#jls-9.4">9.4</a>)</p></li>
+<li><p>a <code>static</code> field declaration (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.3.1.1">8.3.1.1</a>,
+<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-9.html#jls-9.3">9.3</a>)</p></li>
+<li><p>a static initializer (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.7">8.7</a>)</p></li>
+<li><p><del>an explicit constructor invocation statement (<a
+href="#jls-8.8.7.1">8.8.7.1</a>)</del></p></li>
+</ul>
+<blockquote>
+<p>Note that a construct which appears in a constructor declaration or
+an instance initializer does not occur in a static context.</p>
+</blockquote>
+<blockquote>
+<p>The purpose of a static context is to demarcate code <del>that must
+not refer explicitly or implicitly to the current instance of the class
+whose declaration lexically encloses the static context.</del>
+<strong>for which there is no current instance defined of the class
+whose declaration lexically encloses the static context.</strong>
+Consequently, code that occurs in a static context is restricted in the
+following ways:</p>
+</blockquote>
+<blockquote>
+<ul>
+<li><p><code>this</code> expressions (both unqualified and qualified)
+are disallowed (<a href="#jls-15.8.3">15.8.3</a>, <a
+href="#jls-15.8.4">15.8.4</a>).</p></li>
+<li><p>Field accesses, method invocations, and method references may not
+be qualified by <code>super</code> (<a href="#jls-15.11.2">15.11.2</a>,
+<a href="#jls-15.12.3">15.12.3</a>, <a
+href="#jls-15.13.1">15.13.1</a>).</p></li>
+<li><p>Unqualified references to instance variables of any lexically
+enclosing class or interface declaration are disallowed (<a
+href="#jls-6.5.6.1">6.5.6.1</a>).</p></li>
+<li><p>Unqualified invocations of instance methods of any lexically
+enclosing class or interface declaration are disallowed (<a
+href="#jls-15.12.3">15.12.3</a>).</p></li>
+<li><p>References to type parameters of any lexically enclosing class or
+interface declarations are disallowed (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-6.html#jls-6.5.5.1">6.5.5.1</a>).</p></li>
+<li><p>References to type parameters, local variables, formal
+parameters, and exception parameters declared by methods or constructors
+of any lexically enclosing class or interface declaration <em>that is
+outside the immediately enclosing class or interface declaration</em>
+are disallowed (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-6.html#jls-6.5.5.1">6.5.5.1</a>,
+<a href="#jls-6.5.6.1">6.5.6.1</a>).</p></li>
+<li><p>Declarations of local normal classes (as opposed to local enum
+classes) and declarations of anonymous classes both specify classes that
+are inner, yet when instantiated have no immediately enclosing instances
+(<a href="#jls-15.9.2">15.9.2</a>).</p></li>
+<li><p>Class instance creation expressions that instantiate inner member
+classes must be qualified (<a href="#jls-15.9.2">15.9.2</a>).</p></li>
+</ul>
+</blockquote>
+<p>An inner class <em>C</em> is a <em>direct inner class of a class or
+interface O</em> if <em>O</em> is the immediately enclosing class or
+interface declaration of <em>C</em> and the declaration of <em>C</em>
+does not occur in a static context.</p>
+<blockquote>
+<p>If an inner class is a local class or an anonymous class, it may be
+declared in a static context, and in that case is not considered an
+inner class of any enclosing class or interface.</p>
+</blockquote>
+<p>A class <em>C</em> is an <em>inner class of class or interface O</em>
+if it is either a direct inner class of <em>O</em> or an inner class of
+an inner class of <em>O</em>.</p>
+<blockquote>
+<p>It is unusual, but possible, for the immediately enclosing class or
+interface declaration of an inner class to be an interface. This only
+occurs if the class is a local or anonymous class declared in a
+<code>default</code> or <code>static</code> method body (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-9.html#jls-9.4">9.4</a>).</p>
+</blockquote>
+<p>A class or interface <em>O</em> is the <em>zeroth lexically enclosing
+class or interface declaration of itself</em>.</p>
+<p>A class <em>O</em> is the <em>n'th lexically enclosing class
+declaration of a class C</em> if it is the immediately enclosing class
+declaration of the <em>n-1</em>'th lexically enclosing class declaration
+of <em>C</em>.</p>
+<p>An instance <em>i</em> of a direct inner class <em>C</em> of a class
+or interface <em>O</em> <del>is</del> <strong>may be</strong> associated
+with an instance of <em>O</em>, known as the <em>immediately enclosing
+instance of i</em>. The immediately enclosing instance of an object, if
+any, is determined when the object is created (<a
+href="#jls-15.9.2">15.9.2</a>).</p>
+<p>An object <em>o</em> is the <em>zeroth lexically enclosing instance
+of itself</em>.</p>
+<p>An object <em>o</em> is the <em>n'th lexically enclosing instance of
+an instance i</em> if it is the immediately enclosing instance of the
+<em>n-1</em>'th lexically enclosing instance of <em>i</em>.</p>
+<p>An instance of an inner local class or an anonymous class whose
+declaration occurs in a static context has no immediately enclosing
+instance. Also, an instance of a <code>static</code> nested class (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.1.1.4">8.1.1.4</a>)
+has no immediately enclosing instance.</p>
+<div class="inserted">
+<p>An instance of an anonymous class whose declaration occurs in a
+pre-construction context (<a href="#jls-8.8.7.1">8.8.7.1</a>) has no
+immediately enclosing instance.</p>
+</div>
+<p>For every superclass <em>S</em> of <em>C</em> which is itself a
+direct inner class of a class or interface <em>SO</em>, there is an
+instance of <em>SO</em> associated with <em>i</em>, known as the
+<em>immediately enclosing instance of i with respect to S</em>. The
+immediately enclosing instance of an object with respect to its class'
+direct superclass, if any, is determined when the superclass constructor
+is invoked via an explicit constructor invocation <del>statement</del>
+(<a href="#jls-8.8.7.1">8.8.7.1</a>).</p>
+<div class="deleted">
+<p>When an inner class (whose declaration does not occur in a static
+context) refers to an instance variable that is a member of a lexically
+enclosing class or interface declaration, the variable of the
+corresponding lexically enclosing instance is used.</p>
+</div>
+<div class="inserted">
+<p>When an inner class contains a valid reference to an instance
+variable that is a member of a lexically enclosing class or interface
+declaration, the variable of the corresponding lexically enclosing
+instance is used.</p>
+</div>
+<p>Any local variable, formal parameter, or exception parameter used but
+not declared in an inner class must either be <code>final</code> or
+effectively final (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-4.html#jls-4.12.4">4.12.4</a>),
+as specified in <a href="#jls-6.5.6.1">6.5.6.1</a>.</p>
+<p>Any local variable used but not declared in an inner class must be
+definitely assigned (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-16.html">16</a>)
+before the body of the inner class, or a compile-time error occurs.</p>
+<blockquote>
+<p>Similar rules on variable use apply in the body of a lambda
+expression (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.27.2">15.27.2</a>).</p>
+</blockquote>
+<p>A blank <code>final</code> field (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-4.html#jls-4.12.4">4.12.4</a>)
+of a lexically enclosing class or interface declaration may not be
+assigned within an inner class, or a compile-time error occurs.</p>
+<div class="example">
+<p>Example 8.1.3-2. Inner Class Declarations</p>
+<pre><code>class Outer {
+    int i = 100;
+    static void classMethod() {
+        final int l = 200;
+        class LocalInStaticContext {
+            int k = i;  // Compile-time error
+            int m = l;  // OK
+        }
+    }
+    void foo() {
+        class Local {  // A local class
+            int j = i;
+        }
+    }
+}</code></pre>
+<p>The declaration of class <code>LocalInStaticContext</code> occurs in
+a static context due to being within the static method
+<code>classMethod</code>. Instance variables of class <code>Outer</code>
+are not available within the body of a static method. In particular,
+instance variables of <code>Outer</code> are not available inside the
+body of <code>LocalInStaticContext</code>. However, local variables from
+the surrounding method may be referred to without error (provided they
+are declared <code>final</code> or are effectively final).</p>
+<p>Inner classes whose declarations do not occur in a static context may
+freely refer to the instance variables of their enclosing class
+declaration. An instance variable is always defined with respect to an
+instance. In the case of instance variables of an enclosing class
+declaration, the instance variable must be defined with respect to an
+enclosing instance of the inner class. For example, the class
+<code>Local</code> above has an enclosing instance of class
+<code>Outer</code>. As a further example:</p>
+<pre><code>class WithDeepNesting {
+    boolean toBe;
+    WithDeepNesting(boolean b) { toBe = b; }
+
+    class Nested {
+        boolean theQuestion;
+        class DeeplyNested {
+            DeeplyNested(){
+                theQuestion = toBe || !toBe;
+            }
+        }
+    }
+}</code></pre>
+<p>Here, every instance of
+<code>WithDeepNesting.Nested.DeeplyNested</code> has an enclosing
+instance of class <code>WithDeepNesting.Nested</code> (its immediately
+enclosing instance) and an enclosing instance of class
+<code>WithDeepNesting</code> (its 2nd lexically enclosing instance).</p>
+</div>
+<h3 id="jls-8.8">8.8 Constructor Declarations</h3>
+<h4 id="jls-8.8.7">8.8.7 Constructor Body</h4>
+<div class="inserted">
+<p>A constructor body is a block of code that is executed as part of the
+process of creating a new instance of a class (<a
+href="#jls-12.5">12.5</a>). A constructor body may contain an explicit
+invocation of another constructor of the same class or of the direct
+superclass (<a href="#jls-8.8.7.1">8.8.7.1</a>).</p>
+</div>
+<p><del>The first statement of a constructor body may be an explicit
+invocation of another constructor of the same class or of the direct
+superclass (<a href="#jls-8.8.7.1">8.8.7.1</a>).</del></p>
+<dl>
+<dt><em>ConstructorBody:</em></dt>
+<dd>
+<del><code>{</code> [<em>ExplicitConstructorInvocation</em>]
+[<em>BlockStatements</em>] <code>}</code></del>
+</dd>
+<dd>
+<strong><code>{</code> [<em>BlockStatements</em>]
+<code>}</code></strong>
+</dd>
+<dd>
+<strong><code>{</code> [<em>BlockStatements</em>]
+<em>ExplicitConstructorInvocation</em> [<em>BlockStatements</em>]
+<code>}</code></strong>
+</dd>
+</dl>
+<p><del>It is a compile-time error for a constructor to directly or
+indirectly invoke itself through a series of one or more explicit
+constructor invocations involving <code>this</code>.</del></p>
+<div class="editorial">
+<p>The paragraph above has been moved to <a
+href="#jls-8.8.7.1">8.8.7.1</a></p>
+</div>
+<div class="inserted">
+<p>If a constructor body contains an explicit constructor invocation,
+the <em>BlockStatements</em> preceding the explicit constructor
+invocation are called the <em>prologue</em> of the constructor body. The
+<em>BlockStatements</em> in a constructor with no explicit constructor
+invocation and the <em>BlockStatements</em> following an explicit
+constructor invocation in a constructor body are called the
+<em>epilogue</em>.</p>
+</div>
+<p>If a constructor body does not <del>begin with</del>
+<strong>contain</strong> an explicit constructor invocation and the
+constructor being declared is not part of the primordial class
+<code>Object</code>, then the constructor body implicitly begins with a
+superclass constructor invocation "<code>super();</code>", an invocation
+of the constructor of <del>its</del> <strong>the</strong> direct
+superclass that takes no arguments.</p>
+<div class="inserted">
+<p>A <code>return</code> statement (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-14.html#jls-14.17">14.17</a>)
+may be used in the epilogue of a constructor body if it does not include
+an expression. It is a compile-time error if a <code>return</code>
+statement appears in the prologue of a constructor body.</p>
+</div>
+<p>Except for the possibility of explicit <strong>or implicit</strong>
+constructor invocations, and the <del>prohibition on explicitly
+returning a value</del> <strong>prohibitions on <code>return</code>
+statements</strong> (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-14.html#jls-14.17">14.17</a>),
+the body of a constructor is like the body of a method (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.4.7">8.4.7</a>).</p>
+<div class="inserted">
+<blockquote>
+<p>Note that a constructor body contains at most one explicit
+constructor invocation. The grammar makes it impossible, for example, to
+place explicit constructor invocations in different branches of an
+<code>if</code> statement.</p>
+</blockquote>
+</div>
+<p><del>A <code>return</code> statement (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-14.html#jls-14.17">14.17</a>)
+may be used in the body of a constructor if it does not include an
+expression.</del></p>
+<div class="example">
+<p>Example 8.8.7-1. Constructor Bodies</p>
+<pre><code>class Point {
+    int x, y;
+    Point(int x, int y) { this.x = x; this.y = y; }
+}
+class ColoredPoint extends Point {
+    static final int WHITE = 0, BLACK = 1;
+    int color;
+    ColoredPoint(int x, int y) {
+        this(x, y, WHITE);
+    }
+    ColoredPoint(int x, int y, int color) {
+        super(x, y);
+        this.color = color;
+    }
+}</code></pre>
+<p>Here, the first constructor of <code>ColoredPoint</code> invokes the
+second, providing an additional argument; the second constructor of
+<code>ColoredPoint</code> invokes the constructor of its superclass
+<code>Point</code>, passing along the coordinates.</p>
+</div>
+<h5 id="jls-8.8.7.1">8.8.7.1 Explicit Constructor Invocations</h5>
+<dl>
+<dt><em>ExplicitConstructorInvocation:</em></dt>
+<dd>
+[<em>TypeArguments</em>] <code>this</code> <code>(</code>
+[<em>ArgumentList</em>] <code>)</code> <code>;</code>
+</dd>
+<dd>
+[<em>TypeArguments</em>] <code>super</code> <code>(</code>
+[<em>ArgumentList</em>] <code>)</code> <code>;</code>
+</dd>
+<dd>
+<em>ExpressionName</em> <code>.</code> [<em>TypeArguments</em>]
+<code>super</code> <code>(</code> [<em>ArgumentList</em>] <code>)</code>
+<code>;</code>
+</dd>
+<dd>
+<em>Primary</em> <code>.</code> [<em>TypeArguments</em>]
+<code>super</code> <code>(</code> [<em>ArgumentList</em>] <code>)</code>
+<code>;</code>
+</dd>
+</dl>
+<blockquote>
+<p>The following productions from <a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-4.html#jls-4.5.1">4.5.1</a>
+and <a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12">15.12</a>
+are shown here for convenience:</p>
+</blockquote>
+<blockquote>
+<dl>
+<dt><em>TypeArguments:</em></dt>
+<dd>
+<code>&lt;</code> <em>TypeArgumentList</em> <code>&gt;</code>
+</dd>
+<dt><em>ArgumentList:</em></dt>
+<dd>
+<em>Expression</em> {<code>,</code> <em>Expression</em>}
+</dd>
+</dl>
+</blockquote>
+<p>Explicit constructor <del>invocation statements</del>
+<strong>invocations</strong> are divided into two kinds:</p>
+<ul>
+<li><p><em>Alternate constructor invocations</em> begin with the keyword
+<code>this</code> (possibly prefaced with explicit type arguments). They
+are used to invoke an alternate constructor of the same class.</p></li>
+<li><p><em>Superclass constructor invocations</em> begin with either the
+keyword <code>super</code> (possibly prefaced with explicit type
+arguments) or a <em>Primary</em> expression or an
+<em>ExpressionName</em>. They are used to invoke a constructor of the
+direct superclass. They are further divided:</p>
+<ul>
+<li><p><em>Unqualified superclass constructor invocations</em> begin
+with the keyword <code>super</code> (possibly prefaced with explicit
+type arguments).</p></li>
+<li><p><em>Qualified superclass constructor invocations</em> begin with
+a <em>Primary</em> expression or an <em>ExpressionName</em>. They allow
+a subclass constructor to explicitly specify the newly created object's
+immediately enclosing instance with respect to the direct superclass (<a
+href="#jls-8.1.3">8.1.3</a>). This may be necessary when the superclass
+is an inner class.</p></li>
+</ul></li>
+</ul>
+<div class="inserted">
+<p>It is a compile-time error for a constructor to directly or
+indirectly invoke itself through a series of one or more alternate
+constructor invocations.</p>
+</div>
+<div class="deleted">
+<p>An explicit constructor invocation statement introduces a static
+context (<a href="#jls-8.1.3">8.1.3</a>), which limits the use of
+constructs that refer to the current object. Notably, the keywords
+<code>this</code> and <code>super</code> are prohibited in a static
+context (<a href="#jls-15.8.3">15.8.3</a>, <a
+href="#jls-15.11.2">15.11.2</a>), as are unqualified references to
+instance variables, instance methods, and type parameters of lexically
+enclosing declarations (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-6.html#jls-6.5.5.1">6.5.5.1</a>,
+<a href="#jls-6.5.6.1">6.5.6.1</a>, <a
+href="#jls-15.12.3">15.12.3</a>).</p>
+</div>
+<p>If <em>TypeArguments</em> is present to the left of <code>this</code>
+or <code>super</code>, then it is a compile-time error if any of the
+type arguments are wildcards (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-4.html#jls-4.5.1">4.5.1</a>).</p>
+<p><strong>The rules for a superclass constructor invocation,
+where</strong> <del>Let</del> <em>C</em> <del>be</del>
+<strong>is</strong> the class being instantiated, and <del>let</del>
+<em>S</em> <del>be</del> <strong>is</strong> the direct superclass of
+<em>C</em><strong>, are as follows:</strong></p>
+<ul>
+<li><p>If a superclass constructor invocation <del>statement</del> is
+unqualified, then:</p>
+<ul>
+<li><p>If <em>S</em> is an inner member class, but <em>S</em> is not a
+member of a class enclosing <em>C</em>, then a compile-time error
+occurs.</p>
+<p>Otherwise, let <em>O</em> be the innermost enclosing class of
+<em>C</em> of which <em>S</em> is a member. <em>C</em> must be an inner
+class of <em>O</em> (<a href="#jls-8.1.3">8.1.3</a>), or a compile-time
+error occurs.</p></li>
+<li><p>If <em>S</em> is an inner local class, and <em>S</em> does not
+occur in a static context, let <em>O</em> be the immediately enclosing
+class or interface declaration of <em>S</em>. <em>C</em> must be an
+inner class of <em>O</em>, or a compile-time error occurs.</p></li>
+</ul></li>
+<li><p>If a superclass constructor invocation <del>statement</del> is
+qualified, then:</p>
+<ul>
+<li><p>If <em>S</em> is not an inner class, or if the declaration of
+<em>S</em> occurs in a static context, then a compile-time error
+occurs.</p></li>
+<li><p>Otherwise, let <em>p</em> be the <em>Primary</em> expression or
+the <em>ExpressionName</em> immediately preceding "<code>.super</code>",
+and let <em>O</em> be the immediately enclosing class of <em>S</em>. It
+is a compile-time error if the type of <em>p</em> is not <em>O</em> or a
+subclass of <em>O</em>, or if the type of <em>p</em> is not accessible
+(<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-6.html#jls-6.6">6.6</a>).</p></li>
+</ul></li>
+</ul>
+<p>The exception types that an explicit constructor invocation
+<del>statement</del> can throw are specified in <a
+href="#jls-11.2.2">11.2.2</a>.</p>
+<div class="inserted">
+<p>An expression <em>occurs in the pre-construction context of a class
+<em>C</em></em> if both of the following are true:</p>
+<ol type="1">
+<li><p>The innermost method declaration, field declaration, constructor
+declaration, instance initializer, or static initializer which encloses
+the expression is the declaration of a constructor <em>c</em> of class
+<em>C</em>; and</p></li>
+<li><p>The expression is contained in a statement in the prologue of the
+body of <em>c</em> or is enclosed in an explicit constructor invocation
+in the body of <em>c</em>.</p></li>
+</ol>
+<p>An expression is said to <em>occur in a pre-construction context</em>
+if it occurs in the pre-construction context of some class without being
+specific about which class.</p>
+<blockquote>
+<p>Expressions that occur in the pre-construction context of a class
+<em>C</em> are restricted in the following ways:</p>
+<ul>
+<li><p>all unqualified <code>this</code> expressions (<a
+href="#jls-15.8.3">15.8.3</a>) and any qualified <code>this</code>
+expression whose qualifier names the class <em>C</em> are disallowed (<a
+href="#jls-15.8.4">15.8.4</a>).</p></li>
+<li><p>Field accesses, method invocations, and method references may not
+be qualified by <code>super</code> (<a href="#jls-15.11.2">15.11.2</a>,
+<a href="#jls-15.12.3">15.12.3</a>, <a
+href="#jls-15.13.1">15.13.1</a>).</p></li>
+<li><p>References to instance variables of class <em>C</em> are
+disallowed (<a href="#jls-6.5.6.1">6.5.6.1</a>).</p></li>
+<li><p>Invocations of instance methods of class <em>C</em> are
+disallowed (<a href="#jls-15.12.3">15.12.3</a>).</p></li>
+<li><p>Class instance creation expressions that instantiate inner
+classes may not have immediately enclosing instances of class <em>C</em>
+(<a href="#jls-15.9.2">15.9.2</a>).</p></li>
+</ul>
+<p>These restrictions are a subset of the restrictions on an expression
+that occurs in a static context. Unlike in a static context, an
+expression in a pre-construction context is free, for example, to refer
+to the <em>type</em> of the instance under construction.</p>
+</blockquote>
+</div>
+<p>Evaluation of an alternate constructor invocation
+<del>statement</del> proceeds by first evaluating the arguments to the
+constructor, left-to-right, as in an ordinary method invocation; and
+then invoking the constructor.</p>
+<p>Evaluation of a superclass constructor invocation
+<del>statement</del> proceeds as follows:</p>
+<ol type="1">
+<li><p>Let <em>i</em> be the instance being created. The immediately
+enclosing instance of <em>i</em> with respect to <em>S</em> (if any)
+must be determined:</p>
+<ul>
+<li><p>If <em>S</em> is not an inner class, or if the declaration of
+<em>S</em> occurs in a static context, then no immediately enclosing
+instance of <em>i</em> with respect to <em>S</em> exists.</p></li>
+<li><p>Otherwise, if the superclass constructor invocation is
+unqualified, then <em>S</em> is necessarily an inner local class or an
+inner member class.</p>
+<p>If <em>S</em> is an inner local class, let <em>O</em> be the
+immediately enclosing class or interface declaration of <em>S</em>.</p>
+<p>If <em>S</em> is an inner member class, let <em>O</em> be the
+innermost enclosing class of <em>C</em> of which <em>S</em> is a
+member.</p>
+<p>Let <em>n</em> be an integer (<em>n</em> <em>≥</em> 1) such that
+<em>O</em> is the <em>n</em>'th lexically enclosing class or interface
+declaration of <em>C</em>.</p>
+<p>The immediately enclosing instance of <em>i</em> with respect to
+<em>S</em> is the <em>n</em>'th lexically enclosing instance of
+<code>this</code>.</p>
+<blockquote>
+<p>While it may be the case that <em>S</em> is a member of <em>C</em>
+due to inheritance, the zeroth lexically enclosing instance of
+<code>this</code> (that is, <code>this</code> itself) is never used as
+the immediately enclosing instance of <em>i</em> with respect to
+<em>S</em>.</p>
+</blockquote></li>
+<li><p>Otherwise, if the superclass constructor invocation is qualified,
+then the <em>Primary</em> expression or the <em>ExpressionName</em>
+immediately preceding "<code>.super</code>", <em>p</em>, is
+evaluated.</p>
+<p>If <em>p</em> evaluates to <code>null</code>, a
+<code>NullPointerException</code> is raised, and the superclass
+constructor invocation completes abruptly.</p>
+<p>Otherwise, the result of this evaluation is the immediately enclosing
+instance of <em>i</em> with respect to <em>S</em>.</p></li>
+</ul></li>
+<li><p>After determining the immediately enclosing instance of
+<em>i</em> with respect to <em>S</em> (if any), evaluation of the
+superclass constructor invocation <del>statement</del> proceeds by
+evaluating the arguments to the constructor, left-to-right, as in an
+ordinary method invocation; and then invoking the constructor.</p></li>
+<li><p>Finally, if the superclass constructor invocation
+<del>statement</del> completes normally, then all instance variable
+initializers of <em>C</em> and all instance initializers of <em>C</em>
+are executed. If an instance initializer or instance variable
+initializer <em>I</em> textually precedes another instance initializer
+or instance variable initializer <em>J</em>, then <em>I</em> is executed
+before <em>J</em>.</p>
+<p>Execution of instance variable initializers and instance initializers
+is performed regardless of whether the superclass constructor invocation
+actually appears as an explicit constructor invocation
+<del>statement</del> or is provided implicitly. (An alternate
+constructor invocation does not perform this additional implicit
+execution.)</p></li>
+</ol>
+<div class="example">
+<p>Example 8.8.7.1-1. Restrictions on Explicit Constructor
+<del>Invocation Statements</del> <strong>Invocations</strong></p>
+<p>If the first constructor of <code>ColoredPoint</code> in the example
+from <a href="#jls-8.8.7">8.8.7</a> were changed as follows:</p>
+<pre><code>class Point {
+    int x, y;
+    Point(int x, int y) { this.x = x; this.y = y; }
+}
+class ColoredPoint extends Point {
+    static final int WHITE = 0, BLACK = 1;
+    int color;
+    ColoredPoint(int x, int y) {
+        this(x, y, color);  // Changed to color from WHITE
+    }
+    ColoredPoint(int x, int y, int color) {
+        super(x, y);
+        this.color = color;
+    }
+}</code></pre>
+<p>then a compile-time error would occur, because the instance variable
+<code>color</code> cannot be used by a explicit constructor invocation
+<del>statement</del>.</p>
+</div>
+<div class="example">
+<p>Example 8.8.7.1-2. Qualified Superclass Constructor Invocation</p>
+<p>In the code below, <code>ChildOfInner</code> has no lexically
+enclosing class or interface declaration, so an instance of
+<code>ChildOfInner</code> has no enclosing instance. However, the
+superclass of <code>ChildOfInner</code> (<code>Inner</code>) has a
+lexically enclosing class declaration (<code>Outer</code>), and an
+instance of <code>Inner</code> must have an enclosing instance of
+<code>Outer</code>. The enclosing instance of <code>Outer</code> is set
+when an instance of <code>Inner</code> is created. Therefore, when we
+create an instance of <code>ChildOfInner</code>, which is implicitly an
+instance of <code>Inner</code>, we must provide the enclosing instance
+of <code>Outer</code> via a qualified superclass invocation
+<del>statement</del> in <code>ChildOfInner</code>'s constructor. The
+instance of <code>Outer</code> is called the immediately enclosing
+instance of <code>ChildOfInner</code> with respect to
+<code>Inner</code>.</p>
+<pre><code>class Outer {
+    class Inner {}
+}
+class ChildOfInner extends Outer.Inner {
+    ChildOfInner() { (new Outer()).super(); }
+}</code></pre>
+<p>Perhaps surprisingly, the same instance of <code>Outer</code> may
+serve as the immediately enclosing instance of <code>ChildOfInner</code>
+with respect to <code>Inner</code> <em>for multiple instances of
+<code>ChildOfInner</code></em>. These instances of
+<code>ChildOfInner</code> are implicitly linked to the same instance of
+<code>Outer</code>. The program below achieves this by passing an
+instance of <code>Outer</code> to the constructor of
+<code>ChildOfInner</code>, which uses the instance in a qualified
+superclass constructor invocation <del>statement</del>. The rules for an
+explicit constructor invocation <del>statement</del> do not prohibit
+using formal parameters of the constructor that contains the
+<del>statement</del> <strong>invocation</strong>.</p>
+<pre><code>class Outer {
+    int secret = 5;
+    class Inner {
+        int  getSecret()      { return secret; }
+        void setSecret(int s) { secret = s; }
+    }
+}
+class ChildOfInner extends Outer.Inner {
+    ChildOfInner(Outer x) { x.super(); }
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Outer x = new Outer();
+        ChildOfInner a = new ChildOfInner(x);
+        ChildOfInner b = new ChildOfInner(x);
+        System.out.println(b.getSecret());
+        a.setSecret(6);
+        System.out.println(b.getSecret());
+    }
+}</code></pre>
+<p>This program produces the output:</p>
+<pre><code>5
+6</code></pre>
+<p>The effect is that manipulation of instance variables in the common
+instance of <code>Outer</code> is visible through references to
+different instances of <code>ChildOfInner</code>, even though such
+references are not aliases in the conventional sense.</p>
+</div>
+<h3 id="jls-8.10">8.10 Record Classes</h3>
+<h4 id="jls-8.10.4">8.10.4 Record Constructor Declarations</h4>
+<p>To ensure proper initialization of its record components, a record
+class does not implicitly declare a default constructor (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.8.9">8.8.9</a>).
+Instead, a record class has a <em>canonical constructor</em>, declared
+explicitly or implicitly, that initializes all the component fields of
+the record class.</p>
+<p>There are two ways to explicitly declare a canonical constructor in a
+record declaration: by declaring a normal constructor with a suitable
+signature (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.10.4.1">8.10.4.1</a>)
+or by declaring a compact constructor (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.10.4.2">8.10.4.2</a>).</p>
+<blockquote>
+<p>Given the signature of a normal constructor that qualifies as
+canonical, and the signature derived for a compact constructor, the
+rules of constructor signatures (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.8.2">8.8.2</a>)
+mean it is a compile-time error if a record declaration has both a
+normal constructor that qualifies as canonical <em>and</em> a compact
+constructor.</p>
+</blockquote>
+<p>Either way, an explicitly declared canonical constructor must provide
+at least as much access as the record class, as follows:</p>
+<ul>
+<li><p>If the record class is <code>public</code>, then the canonical
+constructor must be <code>public</code>; otherwise, a compile-time error
+occurs.</p></li>
+<li><p>If the record class is <code>protected</code>, then the canonical
+constructor must be <code>protected</code> or <code>public</code>;
+otherwise, a compile-time error occurs.</p></li>
+<li><p>If the record class has package access, then the canonical
+constructor must <em>not</em> be <code>private</code>; otherwise, a
+compile-time error occurs.</p></li>
+<li><p>If the record class is <code>private</code>, then the canonical
+constructor may be declared with any accessibility.</p></li>
+</ul>
+<p>An explicitly declared canonical constructor may be a fixed arity
+constructor or a variable arity constructor (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.8.1">8.8.1</a>).</p>
+<p>If a canonical constructor is not explicitly declared in the
+declaration of a record class <em>R</em>, then a canonical constructor
+<em>r</em> is implicitly declared in <em>R</em> with the following
+properties:</p>
+<ul>
+<li><p>The signature of <em>r</em> has no type parameters, and has
+formal parameters given by the derived formal parameter list of
+<em>R</em>, defined below.</p></li>
+<li><p><em>r</em> has the same access modifier as <em>R</em>, unless
+<em>R</em> lacks an access modifier, in which case <em>r</em> has
+package access.</p></li>
+<li><p><em>r</em> has no <code>throws</code> clause.</p></li>
+<li><p>The body of <em>r</em> initializes each component field of the
+record class with the corresponding formal parameter of <em>r</em>, in
+the order that record components (corresponding to the component fields)
+appear in the record header.</p></li>
+</ul>
+<p>The <em>derived formal parameter list</em> of a record class is
+formed by deriving a formal parameter from each record component in the
+record header, in order, as follows:</p>
+<ul>
+<li><p>If the record component is not a variable arity record component,
+then the derived formal parameter has the same name and declared type as
+the record component.</p>
+<p>If the record component is a variable arity record component, then
+the derived formal parameter is a variable arity parameter (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.4.1">8.4.1</a>)
+with the same name and declared type as the record component.</p></li>
+<li><p>The derived formal parameter is annotated with the annotations,
+if any, that appear on the record component and whose annotation
+interfaces are applicable in the formal parameter context, or in type
+contexts, or both (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-9.html#jls-9.7.4">9.7.4</a>).</p></li>
+</ul>
+<p>A record declaration may contain declarations of constructors that
+are not canonical constructors. The body of every non-canonical
+constructor in a record declaration must <del>start with</del>
+<strong>contain</strong> an alternate constructor invocation (<a
+href="#jls-8.8.7.1">8.8.7.1</a>), or a compile-time error occurs.</p>
+<h2 id="jls-11">Chapter 11: Exceptions</h2>
+<h3 id="jls-11.2">11.2 Compile-Time Checking of Exceptions</h3>
+<h4 id="jls-11.2.2">11.2.2 Exception Analysis of Statements <strong>and
+Explicit Constructor Invocations</strong></h4>
+<p>A <code>throw</code> statement (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-14.html#jls-14.18">14.18</a>)
+whose thrown expression has static type <em>E</em> and is not a final or
+effectively final exception parameter can throw <em>E</em> or any
+exception class that the thrown expression can throw.</p>
+<blockquote>
+<p>For example, the statement
+<code>throw new java.io.FileNotFoundException();</code> can throw
+<code>java.io.FileNotFoundException</code> only. Formally, it is not the
+case that it "can throw" a subclass or superclass of
+<code>java.io.FileNotFoundException</code>.</p>
+</blockquote>
+<p>A <code>throw</code> statement whose thrown expression is a final or
+effectively final exception parameter of a <code>catch</code> clause
+<em>C</em> can throw an exception class <em>E</em> iff:</p>
+<ul>
+<li><p><em>E</em> is an exception class that the <code>try</code> block
+of the <code>try</code> statement which declares <em>C</em> can throw;
+and</p></li>
+<li><p><em>E</em> is assignment compatible with any of <em>C</em>'s
+catchable exception classes; and</p></li>
+<li><p><em>E</em> is not assignment compatible with any of the catchable
+exception classes of the <code>catch</code> clauses declared to the left
+of <em>C</em> in the same <code>try</code> statement.</p></li>
+</ul>
+<p>A <code>try</code> statement (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-14.html#jls-14.20">14.20</a>)
+can throw an exception class <em>E</em> iff either:</p>
+<ul>
+<li><p>The <code>try</code> block can throw <em>E</em>, or an expression
+used to initialize a resource (in a <code>try</code>-with-resources
+statement) can throw <em>E</em>, or the automatic invocation of the
+<code>close()</code> method of a resource (in a
+<code>try</code>-with-resources statement) can throw <em>E</em>, and
+<em>E</em> is not assignment compatible with any catchable exception
+class of any <code>catch</code> clause of the <code>try</code>
+statement, and either no <code>finally</code> block is present or the
+<code>finally</code> block can complete normally; or</p></li>
+<li><p>Some <code>catch</code> block of the <code>try</code> statement
+can throw <em>E</em> and either no <code>finally</code> block is present
+or the <code>finally</code> block can complete normally; or</p></li>
+<li><p>A <code>finally</code> block is present and can throw
+<em>E</em>.</p></li>
+</ul>
+<div class="deleted">
+<p>An explicit constructor invocation statement (<a
+href="#jls-8.8.7.1">8.8.7.1</a>) can throw an exception class <em>E</em>
+iff either:</p>
+<ul>
+<li><p>Some expression of the constructor invocation's parameter list
+can throw <em>E</em>; or</p></li>
+<li><p><em>E</em> is determined to be an exception class of the
+<code>throws</code> clause of the constructor that is invoked (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12.2.6">15.12.2.6</a>).</p></li>
+</ul>
+</div>
+<p>A <code>switch</code> statement (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-14.html#jls-14.11">14.11</a>)
+can throw an exception class <em>E</em> iff either:</p>
+<ul>
+<li><p>The selector expression can throw <em>E</em>; or</p></li>
+<li><p>Some switch rule expression, switch rule block, switch rule
+<code>throw</code> statement, or switch labeled statement group in the
+switch block can throw <em>E</em>.</p></li>
+</ul>
+<p>Any other statement <em>S</em> can throw an exception class
+<em>E</em> iff an expression or statement immediately contained in
+<em>S</em> can throw <em>E</em>.</p>
+<div class="inserted">
+<p>An explicit constructor invocation (<a
+href="#jls-8.8.7.1">8.8.7.1</a>) can throw an exception class <em>E</em>
+iff either:</p>
+<ul>
+<li><p>Some expression of the constructor invocation's argument list can
+throw <em>E</em>; or</p></li>
+<li><p><em>E</em> is determined to be an exception class of the
+<code>throws</code> clause of the constructor that is invoked (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12.2.6">15.12.2.6</a>).</p></li>
+</ul>
+</div>
+<h2 id="jls-12">Chapter 12: Execution</h2>
+<h3 id="jls-12.5">12.5 Creation of New Class Instances</h3>
+<p>A new class instance is explicitly created when evaluation of a class
+instance creation expression (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.9">15.9</a>)
+causes a class to be instantiated.</p>
+<p>A new class instance may be implicitly created in the following
+situations:</p>
+<ul>
+<li><p>Loading of a class or interface that contains a string literal
+(<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-3.html#jls-3.10.5">3.10.5</a>)
+or a text block (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-3.html#jls-3.10.6">3.10.6</a>)
+may create a new <code>String</code> object to denote the string
+represented by the string literal or text block. (This object creation
+will not occur if an instance of <code>String</code> denoting the same
+sequence of Unicode code points as the string represented by the string
+literal or text block has previously been interned.)</p></li>
+<li><p>Execution of an operation that causes boxing conversion (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-5.html#jls-5.1.7">5.1.7</a>).
+Boxing conversion may create a new object of a wrapper class
+(<code>Boolean</code>, <code>Byte</code>, <code>Short</code>,
+<code>Character</code>, <code>Integer</code>, <code>Long</code>,
+<code>Float</code>, <code>Double</code>) associated with one of the
+primitive types.</p></li>
+<li><p>Execution of a string concatenation operator <code>+</code> (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.18.1">15.18.1</a>)
+that is not part of a constant expression (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.29">15.29</a>)
+always creates a new <code>String</code> object to represent the result.
+String concatenation operators may also create temporary wrapper objects
+for a value of a primitive type.</p></li>
+<li><p>Evaluation of a method reference expression (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.13.3">15.13.3</a>)
+or a lambda expression (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.27.4">15.27.4</a>)
+may require that a new instance be created of a class that implements a
+functional interface type (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-9.html#jls-9.8">9.8</a>).</p></li>
+</ul>
+<p>Each of these situations identifies a particular constructor (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.8">8.8</a>)
+to be called with specified arguments (possibly none) as part of the
+class instance creation process.</p>
+<p>Whenever a new class instance is created, memory space is allocated
+for it with room for all the instance variables declared in the class
+and all the instance variables declared in each superclass of the class,
+including all the instance variables that may be hidden (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.3">8.3</a>).</p>
+<p>If there is not sufficient space available to allocate memory for the
+object, then creation of the class instance completes abruptly with an
+<code>OutOfMemoryError</code>. Otherwise, all the instance variables in
+the new object, including those declared in superclasses, are
+initialized to their default values (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-4.html#jls-4.12.5">4.12.5</a>).</p>
+<p>Just before a reference to the newly created object is returned as
+the result, the indicated constructor is processed to initialize the new
+object using the following procedure:</p>
+<div class="deleted">
+<ol type="1">
+<li><p>Assign the arguments for the constructor to newly created
+parameter variables for this constructor invocation.</p></li>
+<li><p>If this constructor begins with an explicit constructor
+invocation (<a href="#jls-8.8.7.1">8.8.7.1</a>) of another constructor
+in the same class (using <code>this</code>), then evaluate the arguments
+and process that constructor invocation recursively using these same
+five steps. If that constructor invocation completes abruptly, then this
+procedure completes abruptly for the same reason; otherwise, continue
+with step 5.</p></li>
+<li><p>This constructor does not begin with an explicit constructor
+invocation of another constructor in the same class (using
+<code>this</code>). If this constructor is for a class other than
+<code>Object</code>, then this constructor will begin with an explicit
+or implicit invocation of a superclass constructor (using
+<code>super</code>). Evaluate the arguments and process that superclass
+constructor invocation recursively using these same five steps. If that
+constructor invocation completes abruptly, then this procedure completes
+abruptly for the same reason. Otherwise, continue with step 4.</p></li>
+<li><p>Execute the instance initializers and instance variable
+initializers for this class, assigning the values of instance variable
+initializers to the corresponding instance variables, in the
+left-to-right order in which they appear textually in the source code
+for the class. If execution of any of these initializers results in an
+exception, then no further initializers are processed and this procedure
+completes abruptly with that same exception. Otherwise, continue with
+step 5.</p></li>
+<li><p>Execute the rest of the body of this constructor. If that
+execution completes abruptly, then this procedure completes abruptly for
+the same reason. Otherwise, this procedure completes normally.</p></li>
+</ol>
+</div>
+<div class="inserted">
+<ol type="1">
+<li><p>Assign the arguments for the constructor to newly created
+parameter variables for this constructor invocation.</p></li>
+<li><p>If this constructor does not contain an explicit constructor
+invocation (<a href="#jls-8.8.7.1">8.8.7.1</a>) then continue from step
+5.</p></li>
+<li><p>Execute the <em>BlockStatements</em>, if any, of the prologue of
+the constructor body. If execution of any statement completes abruptly,
+then execution of the constructor completes abruptly for the same
+reason, otherwise continue with the next step.</p></li>
+<li><p>The explicit constructor invocation is either an invocation of
+another constructor in the same class (using <code>this</code>) or an
+invocation of a superclass constructor (using <code>super</code>).
+Evaluate the arguments of the constructor invocation and process the
+constructor invocation recursively using these same seven steps. If the
+constructor invocation completes abruptly, then this procedure completes
+abruptly for the same reason. Otherwise, continue from step 7 if the
+invocation is of another constructor in the same class, and continue
+from step 6 if the invocation is of a superclass constructor.</p></li>
+<li><p>If this constructor is for a class other than
+<code>Object</code>, then this constructor contains an implicit
+invocation of a superclass constructor with no arguments. In this case,
+process the implicit constructor invocation recursively using these same
+seven steps. If that constructor invocation completes abruptly, then
+this procedure completes abruptly for the same reason, otherwise
+continue with the next step.</p></li>
+<li><p>Execute the instance initializers and instance variable
+initializers for this class, assigning the values of instance variable
+initializers to the corresponding instance variables, in the
+left-to-right order in which they appear textually in the source code
+for the class. If execution of any of these initializers results in an
+exception, then no further initializers are processed and this procedure
+completes abruptly with that same exception, otherwise continue with the
+next step.</p></li>
+<li><p>Execute the <em>BlockStatements</em>, if any, of the epilogue of
+this constructor. If execution of any statement completes abruptly, then
+this procedure completes abruptly for the same reason. Otherwise, this
+procedure completes normally.</p></li>
+</ol>
+</div>
+<p>Unlike C++, the Java programming language does not specify altered
+rules for method dispatch during the creation of a new class instance.
+If methods are invoked that are overridden in subclasses in the object
+being initialized, then these overriding methods are used, even before
+the new object is completely initialized.</p>
+<div class="example">
+<p>Example 12.5-1. Evaluation of Instance Creation</p>
+<pre><code>class Point {
+    int x, y;
+    Point() { x = 1; y = 1; }
+}
+class ColoredPoint extends Point {
+    int color = 0xFF00FF;
+}
+class Test {
+    public static void main(String[] args) {
+        ColoredPoint cp = new ColoredPoint();
+        System.out.println(cp.color);
+    }
+}</code></pre>
+<p>Here, a new instance of <code>ColoredPoint</code> is created. First,
+space is allocated for the new <code>ColoredPoint</code>, to hold the
+fields <code>x</code>, <code>y</code>, and <code>color</code>. All these
+fields are then initialized to their default values (in this case,
+<code>0</code> for each field). Next, the <code>ColoredPoint</code>
+constructor with no arguments is first invoked. Since
+<code>ColoredPoint</code> declares no constructors, a default
+constructor of the following form is implicitly declared:</p>
+<pre><code>ColoredPoint() { super(); }</code></pre>
+<p>This constructor then invokes the <code>Point</code> constructor with
+no arguments. The <code>Point</code> constructor does not begin with an
+invocation of a constructor, so the Java compiler provides an implicit
+invocation of its superclass constructor of no arguments, as though it
+had been written:</p>
+<pre><code>Point() { super(); x = 1; y = 1; }</code></pre>
+<p>Therefore, the constructor for <code>Object</code> which takes no
+arguments is invoked.</p>
+<p>The class <code>Object</code> has no superclass, so the recursion
+terminates here. Next, any instance initializers and instance variable
+initializers of <code>Object</code> are invoked. Next, the body of the
+constructor of <code>Object</code> that takes no arguments is executed.
+No such constructor is declared in <code>Object</code>, so the Java
+compiler supplies a default one, which in this special case is:</p>
+<pre><code>Object() { }</code></pre>
+<p>This constructor executes without effect and returns.</p>
+<p>Next, all initializers for the instance variables of class
+<code>Point</code> are executed. As it happens, the declarations of
+<code>x</code> and <code>y</code> do not provide any initialization
+expressions, so no action is required for this step of the example. Then
+the body of the <code>Point</code> constructor is executed, setting
+<code>x</code> to <code>1</code> and <code>y</code> to
+<code>1</code>.</p>
+<p>Next, the initializers for the instance variables of class
+<code>ColoredPoint</code> are executed. This step assigns the value
+<code>0xFF00FF</code> to <code>color</code>. Finally, the <del>rest of
+the body</del> <strong>epilogue</strong> of the
+<code>ColoredPoint</code> constructor is executed (the part after the
+invocation of <code>super</code>); there happen to be no statements in
+the <del>rest of the body</del> <strong>epilogue</strong>, so no further
+action is required and initialization is complete.</p>
+</div>
+<div class="example">
+<p>Example 12.5-2. Dynamic Dispatch During Instance Creation</p>
+<pre><code>class Super {
+    Super() { printThree(); }
+    void printThree() { System.out.println(&quot;three&quot;); }
+}
+class Test extends Super {
+    int three = (int)Math.PI;  // That is, 3
+    void printThree() { System.out.println(three); }
+
+    public static void main(String[] args) {
+        Test t = new Test();
+        t.printThree();
+    }
+}</code></pre>
+<p>This program produces the output:</p>
+<pre><code>0
+3</code></pre>
+<p>This shows that the invocation of <code>printThree</code> in the
+constructor for class <code>Super</code> does not invoke the definition
+of <code>printThree</code> in class <code>Super</code>, but rather
+invokes the overriding definition of <code>printThree</code> in class
+<code>Test</code>. This method therefore runs before the field
+initializers of <code>Test</code> have been executed, which is why the
+first value output is <code>0</code>, the default value to which the
+field <code>three</code> of <code>Test</code> is initialized. The later
+invocation of <code>printThree</code> in method <code>main</code>
+invokes the same definition of <code>printThree</code>, but by that
+point the initializer for instance variable <code>three</code> has been
+executed, and so the value <code>3</code> is printed.</p>
+</div>
+<h2 id="jls-14">Chapter 14: Blocks, Statements, and Patterns</h2>
+<h3 id="jls-14.22">14.22 Unreachable Statements</h3>
+<p>It is a compile-time error if a statement cannot be executed because
+it is <em>unreachable</em>.</p>
+<blockquote>
+<p>This section is devoted to a precise explanation of the word
+"reachable." The idea is that there must be some possible execution path
+from the beginning of the constructor, method, instance initializer, or
+static initializer that contains the statement to the statement itself.
+The analysis takes into account the structure of statements. Except for
+the special treatment of <code>while</code>, <code>do</code>, and
+<code>for</code> statements whose condition expression has the constant
+value <code>true</code>, the values of expressions are not taken into
+account in the flow analysis.</p>
+</blockquote>
+<blockquote>
+<p>For example, a Java compiler will accept the code:</p>
+<pre><code>{
+    int n = 5;
+    while (n &gt; 7) k = 2;
+}</code></pre>
+<p>even though the value of <code>n</code> is known at compile time and
+in principle it can be known at compile time that the assignment to
+<code>k</code> can never be executed.</p>
+</blockquote>
+<p>The rules in this section define two technical terms:</p>
+<ul>
+<li><p>whether a statement is <em>reachable</em></p></li>
+<li><p>whether a statement <em>can complete normally</em></p></li>
+</ul>
+<p>The rules allow a statement to complete normally only if it is
+reachable.</p>
+<p>Two further technical terms are used:</p>
+<ul>
+<li><p>A reachable <code>break</code> statement <em>exits a
+statement</em> if, within the break target, either there are no
+<code>try</code> statements whose <code>try</code> blocks contain the
+<code>break</code> statement, or there are <code>try</code> statements
+whose <code>try</code> blocks contain the <code>break</code> statement
+and all <code>finally</code> clauses of those <code>try</code>
+statements can complete normally.</p>
+<blockquote>
+<p>This definition is based on the logic around "attempts to transfer
+control" in [14.15].</p>
+</blockquote></li>
+<li><p>A <code>continue</code> statement <em>continues a <code>do</code>
+statement</em> if, within the <code>do</code> statement, either there
+are no <code>try</code> statements whose <code>try</code> blocks contain
+the <code>continue</code> statement, or there are <code>try</code>
+statements whose <code>try</code> blocks contain the
+<code>continue</code> statement and all <code>finally</code> clauses of
+those <code>try</code> statements can complete normally.</p></li>
+</ul>
+<p>The rules are as follows:</p>
+<ul>
+<li><p>The block that is the body of a constructor, method, instance
+initializer, static initializer, lambda expression, or
+<code>switch</code> expression is reachable.</p></li>
+<li><p>An empty block that is not a switch block can complete normally
+iff it is reachable.</p>
+<p>A non-empty block that is not a switch block <strong>or a constructor
+body containing an explicit constructor invocation</strong> can complete
+normally iff the last statement in it can complete normally.</p>
+<p>The first statement in a non-empty block that is not a switch block
+<strong>or a constructor body containing an explicit constructor
+invocation</strong> is reachable iff the block is reachable.</p>
+<p>Every other statement <em>S</em> in a non-empty block that is not a
+switch block <strong>or a constructor body containing an explicit
+constructor invocation</strong> is reachable iff the statement preceding
+<em>S</em> can complete normally.</p></li>
+</ul>
+<div class="inserted">
+<ul>
+<li><p>A non-empty block that is the body of a constructor containing an
+explicit constructor invocation can complete normally iff the last
+statement in it can complete normally.</p>
+<p>The first statement in a non-empty prologue of a constructor body
+containing an explicit constructor invocation is reachable iff the block
+is reachable.</p>
+<p>Every other statement <em>S</em> in the prologue of a constructor
+body containing an explicit constructor invocation is reachable iff the
+statement preceding <em>S</em> can complete normally.</p>
+<p>The first statement in a non-empty epilogue of a constructor
+containing an explicit constructor invocation and an empty prologue is
+reachable iff the block is reachable.</p>
+<p>The first statement in a non-empty epilogue of a constructor
+containing an explicit constructor invocation and a non-empty prologue
+is reachable iff the last statement of the prologue of the constructor
+can complete normally.</p>
+<p>Every other statement <em>S</em> in the epilogue of a constructor
+containing an explicit constructor invocation is reachable iff the
+statement preceding <em>S</em> can complete normally.</p></li>
+</ul>
+</div>
+<div class="editorial">
+<p>The rest of section 14.22 is unchanged.</p>
+</div>
+<h2 id="jls-15">Chapter 15: Expressions</h2>
+<h3 id="jls-15.8">15.8 Primary Expressions</h3>
+<h4 id="jls-15.8.3">15.8.3 <code>this</code></h4>
+<p>The keyword <code>this</code> may be used as an expression in the
+following contexts:</p>
+<ul>
+<li><p>in the body of an instance method of a class (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.4.3.2">8.4.3.2</a>)</p></li>
+<li><p>in the body of a constructor of a class (<a
+href="#jls-8.8.7">8.8.7</a>)</p></li>
+<li><p>in an instance initializer of a class (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.6">8.6</a>)</p></li>
+<li><p>in the initializer of an instance variable of a class (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.3.2">8.3.2</a>)</p></li>
+<li><p>in the body of an instance method of an interface, that is, a
+default method or a non-<code>static</code> <code>private</code>
+interface method (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-9.html#jls-9.4">9.4</a>)</p></li>
+</ul>
+<p>When used as an expression, the keyword <code>this</code> denotes a
+value that is a reference either to the object for which the instance
+method was invoked (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12">15.12</a>),
+or to the object being constructed. The value denoted by
+<code>this</code> in a lambda body (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.27.2">15.27.2</a>)
+is the same as the value denoted by <code>this</code> in the surrounding
+context.</p>
+<blockquote>
+<p>The keyword <code>this</code> is also used in explicit constructor
+<del>invocation statements</del> <strong>invocations</strong> (<a
+href="#jls-8.8.7.1">8.8.7.1</a>), and to denote the receiver parameter
+of a method or constructor (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.4">8.4</a>).</p>
+</blockquote>
+<p>It is a compile-time error if a <code>this</code> expression occurs
+in a static context (<a href="#jls-8.1.3">8.1.3</a>) <strong>or in a
+pre-construction context (<a
+href="#jls-8.8.7.1">8.8.7.1</a>)</strong>.</p>
+<p>Let <em>C</em> by the innermost enclosing class or interface
+declaration of a <code>this</code> expression. If <em>C</em> is generic,
+with type parameters <em>F<sub>1</sub></em>,...,<em>F<sub>n</sub></em>,
+the type of <code>this</code> is
+<em>C</em><code>&lt;</code><em>F<sub>1</sub></em>,...,<em>F<sub>n</sub></em><code>&gt;</code>.
+Otherwise, the type of <code>this</code> is <em>C</em>.</p>
+<p>At run time, the class of the actual object referred to may be
+<em>C</em> or a subclass of <em>C</em> (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.1.5">8.1.5</a>).</p>
+<div class="example">
+<p>Example 15.8.3-1. The <code>this</code> Expression</p>
+<pre><code>class IntVector {
+    int[] v;
+    boolean equals(IntVector other) {
+        if (this == other)
+            return true;
+        if (v.length != other.v.length)
+            return false;
+        for (int i = 0; i &lt; v.length; i++) {
+            if (v[i] != other.v[i]) return false;
+        }
+        return true;
+    }
+}</code></pre>
+<p>Here, the class <code>IntVector</code> implements a method
+<code>equals</code>, which compares two vectors. If the other vector is
+the same vector object as the one for which the <code>equals</code>
+method was invoked, then the check can skip the length and value
+comparisons. The <code>equals</code> method implements this check by
+comparing the reference to the other object to <code>this</code>.</p>
+</div>
+<h4 id="jls-15.8.4">15.8.4 Qualified <code>this</code></h4>
+<p>Any lexically enclosing instance (<a href="#jls-8.1.3">8.1.3</a>) can
+be referred to by explicitly qualifying the keyword
+<code>this</code>.</p>
+<p>Let <em>n</em> be an integer such that <em>TypeName</em> denotes the
+<em>n</em>'th lexically enclosing class or interface declaration of the
+class or interface whose declaration immediately encloses the qualified
+<code>this</code> expression.</p>
+<p>The value of a qualified <code>this</code> expression
+<em>TypeName</em><code>.this</code> is the <em>n</em>'th lexically
+enclosing instance of <code>this</code>.</p>
+<p>If <em>TypeName</em> denotes a generic class, with type parameters
+<em>F<sub>1</sub></em>,...,<em>F<sub>n</sub></em>, the type of the
+qualified <code>this</code> expression is
+<em>TypeName</em><code>&lt;</code><em>F<sub>1</sub></em>,...,<em>F<sub>n</sub></em><code>&gt;</code>.
+Otherwise, the type of the qualified <code>this</code> expression is
+<em>TypeName</em>.</p>
+<p>It is a compile-time error if a qualified <code>this</code>
+expression occurs in a static context (<a
+href="#jls-8.1.3">8.1.3</a>).</p>
+<div class="inserted">
+<p>It is a compile-time error if a qualified <code>this</code>
+expression occurs in a pre-construction context (<a
+href="#jls-8.8.7.1">8.8.7.1</a>) of the class named by
+<em>TypeName</em>.</p>
+</div>
+<p>It is a compile-time error if the class or interface whose
+declaration immediately encloses a qualified <code>this</code>
+expression is not an inner class of <em>TypeName</em> or
+<em>TypeName</em> itself.</p>
+<h3 id="jls-15.9">15.9 Class Instance Creation Expressions</h3>
+<h4 id="jls-15.9.2">15.9.2 Determining Enclosing Instances</h4>
+<p>Let <em>C</em> be the class being instantiated, and let <em>i</em> be
+the instance being created. If <em>C</em> is an inner class, then
+<em>i</em> may have an <em>immediately enclosing instance</em> (<a
+href="#jls-8.1.3">8.1.3</a>), determined as follows:</p>
+<ul>
+<li><p>If <em>C</em> is an anonymous class, then:</p>
+<ul>
+<li><p>If the class instance creation expression occurs in a static
+context <strong>or a pre-construction context</strong>, then <em>i</em>
+has no immediately enclosing instance.</p></li>
+<li><p>Otherwise, the immediately enclosing instance of <em>i</em> is
+<code>this</code>.</p></li>
+</ul></li>
+<li><p>If <em>C</em> is an inner local class, then:</p>
+<ul>
+<li><p>If <em>C</em> occurs in a static context, then <em>i</em> has no
+immediately enclosing instance.</p></li>
+<li><p>Otherwise, if the class instance creation expression occurs in a
+static context, then a compile-time error occurs.</p></li>
+<li><p>Otherwise, let <em>O</em> be the immediately enclosing class or
+interface declaration of <em>C</em>, and let <em>U</em> be the
+immediately enclosing class or interface declaration of the class
+instance creation expression.</p>
+<p><strong>1. </strong> If <em>U</em> is not an inner class of
+<em>O</em> or <em>O</em> itself, then a compile-time error occurs.</p>
+<p><strong>2. If the class instance creation expression occurs in the
+pre-construction context of <em>O</em>, then a compile-time error
+occurs.</strong></p>
+<p>Let <em>n</em> be an integer such that <em>O</em> is the
+<em>n</em>'th lexically enclosing class or interface declaration of
+<em>U</em>.</p>
+<p>The immediately enclosing instance of <em>i</em> is the <em>n</em>'th
+lexically enclosing instance of <code>this</code>.</p></li>
+</ul></li>
+<li><p>If <em>C</em> is an inner member class, then:</p>
+<ul>
+<li><p>If the class instance creation expression is unqualified,
+then:</p>
+<ul>
+<li><p>If the class instance creation expression occurs in a static
+context, then a compile-time error occurs.</p></li>
+<li><p>Otherwise, if <em>C</em> is not a member of any class whose
+declaration lexically encloses the class instance creation expression,
+then a compile-time error occurs.</p></li>
+<li><p>Otherwise, let <em>O</em> be the innermost enclosing class
+declaration of which <em>C</em> is a member, and let <em>U</em> be the
+immediately enclosing class or interface declaration of the class
+instance creation expression.</p>
+<p><strong>1. </strong> If <em>U</em> is not an inner class of
+<em>O</em> or <em>O</em> itself, then a compile-time error occurs.</p>
+<p><strong>2. If the class instance creation expression occurs in the
+pre-construction context of <em>O</em>, then a compile-time error
+occurs.</strong></p>
+<p>Let <em>n</em> be an integer such that <em>O</em> is the
+<em>n</em>'th lexically enclosing class or interface declaration of
+<em>U</em></p>
+<p>The immediately enclosing instance of <em>i</em> is the <em>n</em>'th
+lexically enclosing instance of <code>this</code>.</p></li>
+</ul></li>
+<li><p>If the class instance creation expression is qualified, then the
+immediately enclosing instance of <em>i</em> is the object that is the
+value of the <em>Primary</em> expression or the
+<em>ExpressionName</em>.</p></li>
+</ul></li>
+</ul>
+<p>If <em>C</em> is an anonymous class, and its direct superclass
+<em>S</em> is an inner class, then <em>i</em> may have an
+<em>immediately enclosing instance with respect to S</em>, determined as
+follows:</p>
+<ul>
+<li><p>If <em>S</em> is an inner local class, then:</p>
+<ul>
+<li><p>If <em>S</em> occurs in a static context, then <em>i</em> has no
+immediately enclosing instance with respect to <em>S</em>.</p></li>
+<li><p>Otherwise, if the class instance creation expression occurs in a
+static context, then a compile-time error occurs.</p></li>
+<li><p>Otherwise, let <em>O</em> be the immediately enclosing class or
+interface declaration of <em>S</em>, and let <em>U</em> be the
+immediately enclosing class or interface declaration of the class
+instance creation expression.</p>
+<p><strong>1. </strong> If <em>U</em> is not an inner class of
+<em>O</em> or <em>O</em> itself, then a compile-time error occurs.</p>
+<p><strong>2. If <em>U</em> is <em>O</em> itself and the class instance
+creation expression occurs in the pre-construction context of
+<em>O</em>, then a compile-time error occurs.</strong></p>
+<p>Let <em>n</em> be an integer such that <em>O</em> is the
+<em>n</em>'th lexically enclosing class or interface declaration of
+<em>U</em>.</p>
+<p>The immediately enclosing instance of <em>i</em> with respect to
+<em>S</em> is the <em>n</em>'th lexically enclosing instance of
+<code>this</code>.</p></li>
+</ul></li>
+<li><p>If <em>S</em> is an inner member class, then:</p>
+<ul>
+<li><p>If the class instance creation expression is unqualified,
+then:</p>
+<ul>
+<li><p>If the class instance creation expression occurs in a static
+context, then a compile-time error occurs.</p></li>
+<li><p>Otherwise, if <em>S</em> is not a member of any class whose
+declaration encloses the class instance creation expression, then a
+compile-time error occurs.</p></li>
+<li><p>Otherwise, let <em>O</em> be the innermost enclosing class
+declaration of which <em>S</em> is a member, and let <em>U</em> be the
+immediately enclosing class or interface declaration of the class
+instance creation expression.</p>
+<p><strong>1. </strong> If <em>U</em> is not an inner class of
+<em>O</em> or <em>O</em> itself, then a compile-time error occurs.</p>
+<p><strong>2. If <em>U</em> is <em>O</em> itself and the class instance
+creation expression occurs in the pre-construction context of
+<em>O</em>, then a compile-time error occurs.</strong></p>
+<p>Let <em>n</em> be an integer such that <em>O</em> is the
+<em>n</em>'th lexically enclosing class or interface declaration of
+<em>U</em>.</p>
+<p>The immediately enclosing instance of <em>i</em> with respect to
+<em>S</em> is the <em>n</em>'th lexically enclosing instance of
+<code>this</code>.</p></li>
+<li><p>Otherwise, a compile-time error occurs.</p></li>
+</ul></li>
+<li><p>If the class instance creation expression is qualified, then the
+immediately enclosing instance of <em>i</em> with respect to <em>S</em>
+is the object that is the value of the <em>Primary</em> expression or
+the <em>ExpressionName</em>.</p></li>
+</ul></li>
+</ul>
+<!--:::inserted
+
+CUT!! Now folded into definitions above
+
+If the class instance creation expression occurs in the pre-construction context
+of class *K* ([8.8.7.1]) and the immediately enclosing instance is also an
+instance of *K* then a compile-time error occurs.
+
+> Any expression appearing in a pre-construction context is restricted so it can
+> not refer implicitly or explicitly to the current object ([8.8.7.1]). In the
+> following example:
+>
+> ```
+> class K {
+>    class C { ... }
+>    K() {
+>        new C(); // Compile-time error!
+>        super();
+>    }
+> }
+> ```
+>
+> The class instance creation expression appearing in the constructor body
+> creates an instance of class *C* whose enclosing instance is the current
+> object, so this results in a compile-time error.
+
+:::
+-->
+<h3 id="jls-15.11">15.11 Field Access Expressions</h3>
+<h4 id="jls-15.11.2">15.11.2 Accessing Superclass Members using
+<code>super</code></h4>
+<p>The form <code>super.</code><em>Identifier</em> refers to the field
+named <em>Identifier</em> of the current object, but with the current
+object viewed as an instance of the superclass of the current class.</p>
+<p>The form <em>T</em><code>.super.</code><em>Identifier</em> refers to
+the field named <em>Identifier</em> of the lexically enclosing instance
+corresponding to <em>T</em>, but with that instance viewed as an
+instance of the superclass of <em>T</em>.</p>
+<p>The forms using the keyword <code>super</code> may be used in the
+locations within a class declaration that allow the keyword
+<code>this</code> as an expression (<a
+href="#jls-15.8.3">15.8.3</a>).</p>
+<p>It is a compile-time error if a field access expression using the
+keyword <code>super</code> appears in a static context (<a
+href="#jls-8.1.3">8.1.3</a>) <strong>or in a pre-construction context
+(<a href="#jls-8.8.7.1">8.8.7.1</a>)</strong>.</p>
+<p>For a field access expression of the form
+<code>super.</code><em>Identifier</em>:</p>
+<ul>
+<li>It is a compile-time error if the immediately enclosing class or
+interface declaration of the field access expression is the class
+<code>Object</code> or an interface.</li>
+</ul>
+<p>For a field access expression of the form
+<em>T</em><code>.super.</code><em>Identifier</em>:</p>
+<ul>
+<li><p>It is a compile-time error if <em>T</em> is the class
+<code>Object</code> or an interface.</p></li>
+<li><p>Let <em>U</em> be the immediately enclosing class or interface
+declaration of the field access expression. It is a compile-time error
+if <em>U</em> is not an inner class of <em>T</em> or <em>T</em>
+itself.</p></li>
+</ul>
+<p>Suppose that a field access expression <code>super.</code><em>f</em>
+appears within class <em>C</em>, and the immediate superclass of
+<em>C</em> is class <em>S</em>. If <em>f</em> in <em>S</em> is
+accessible from class <em>C</em> (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-6.html#jls-6.6">6.6</a>),
+then <code>super.</code><em>f</em> is treated as if it had been the
+expression <code>this.</code><em>f</em> in the body of class <em>S</em>.
+Otherwise, a compile-time error occurs.</p>
+<blockquote>
+<p>Thus, <code>super.</code><em>f</em> can access the field <em>f</em>
+that is accessible in class <em>S</em>, even if that field is hidden by
+a declaration of a field <em>f</em> in class <em>C</em>.</p>
+</blockquote>
+<p>Suppose that a field access expression
+<em>T</em><code>.super.</code><em>f</em> appears within class
+<em>C</em>, and the immediate superclass of the class denoted by
+<em>T</em> is a class whose fully qualified name is <em>S</em>. If
+<em>f</em> in <em>S</em> is accessible from <em>C</em>, then
+<em>T</em><code>.super.</code><em>f</em> is treated as if it had been
+the expression <code>this.</code><em>f</em> in the body of class
+<em>S</em>. Otherwise, a compile-time error occurs.</p>
+<blockquote>
+<p>Thus, <em>T</em><code>.super.</code><em>f</em> can access the field
+<em>f</em> that is accessible in class <em>S</em>, even if that field is
+hidden by a declaration of a field <em>f</em> in class <em>T</em>.</p>
+</blockquote>
+<div class="example">
+<p>Example 15.11.2-1. The <code>super</code> Expression</p>
+<pre><code>interface I           { int x = 0; }
+class T1 implements I { int x = 1; }
+class T2 extends T1   { int x = 2; }
+class T3 extends T2 {
+    int x = 3;
+    void test() {
+        System.out.println(&quot;x=\t\t&quot;          + x);
+        System.out.println(&quot;super.x=\t\t&quot;    + super.x);
+        System.out.println(&quot;((T2)this).x=\t&quot; + ((T2)this).x);
+        System.out.println(&quot;((T1)this).x=\t&quot; + ((T1)this).x);
+        System.out.println(&quot;((I)this).x=\t&quot;  + ((I)this).x);
+    }
+}
+class Test {
+    public static void main(String[] args) {
+        new T3().test();
+    }
+}</code></pre>
+<p>This program produces the output:</p>
+<pre><code>x=              3
+super.x=        2
+((T2)this).x=   2
+((T1)this).x=   1
+((I)this).x=    0</code></pre>
+<p>Within class <code>T3</code>, the expression <code>super.x</code> has
+the same effect as <code>((T2)this).x</code> when <code>x</code> has
+package access. Note that <code>super.x</code> is not specified in terms
+of a cast, due to difficulties around access to <code>protected</code>
+members of the superclass.</p>
+</div>
+<h3 id="jls-15.12">15.12 Method Invocation Expressions</h3>
+<h4 id="jls-15.12.3">15.12.3 Compile-Time Step 3: Is the Chosen Method
+Appropriate?</h4>
+<p>If there is a most specific method declaration for a method
+invocation, it is called the <em>compile-time declaration</em> for the
+method invocation.</p>
+<p>It is a compile-time error if an argument to a method invocation is
+not compatible with its target type, as derived from the invocation type
+of the compile-time declaration.</p>
+<p>If the compile-time declaration is applicable by variable arity
+invocation, then where the last formal parameter type of the invocation
+type of the method is <em>F<sub>n</sub></em><code>[]</code>, it is a
+compile-time error if the type which is the erasure of
+<em>F<sub>n</sub></em> is not accessible (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-6.html#jls-6.6">6.6</a>)
+at the point of invocation.</p>
+<p>If the compile-time declaration is <code>void</code>, then the method
+invocation must be a top level expression (that is, the
+<em>Expression</em> in an expression statement or in the
+<em>ForInit</em> or <em>ForUpdate</em> part of a <code>for</code>
+statement), or a compile-time error occurs. Such a method invocation
+produces no value and so must be used only in a situation where a value
+is not needed.</p>
+<p>In addition, whether the compile-time declaration is appropriate may
+depend on the form of the method invocation expression before the left
+parenthesis, as follows:</p>
+<ul>
+<li><p>If the form is <em>MethodName</em> - that is, just an
+<em>Identifier</em> - and the compile-time declaration is an instance
+method, then:</p>
+<ul>
+<li><p>It is a compile-time error if the method invocation occurs in a
+static context (<a href="#jls-8.1.3">8.1.3</a>).</p></li>
+<li><p>Otherwise, let <em>T</em> be the class or interface to search (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12.1">15.12.1</a>).
+It is a compile-time error if <strong>either the method invocation
+occurs in a pre-construction context of class <em>T</em> (<a
+href="#jls-8.8.7.1">8.8.7.1</a>), or</strong> the innermost enclosing
+class or interface declaration of the method invocation is neither
+<em>T</em> nor an inner class of <em>T</em>.</p></li>
+</ul></li>
+<li><p>If the form is <em>TypeName</em> <code>.</code>
+<em>[TypeArguments]</em> <em>Identifier</em>, then the compile-time
+declaration must be <code>static</code>, or a compile-time error
+occurs.</p></li>
+<li><p>If the form is <em>ExpressionName</em> <code>.</code>
+<em>[TypeArguments]</em> <em>Identifier</em> or <em>Primary</em>
+<code>.</code> <em>[TypeArguments]</em> <em>Identifier</em>, then the
+compile-time declaration must not be a <code>static</code> method
+declared in an interface, or a compile-time error occurs.</p></li>
+<li><p>If the form is <code>super</code> <code>.</code>
+<em>[TypeArguments]</em> <em>Identifier</em>, then:</p>
+<ul>
+<li><p>It is a compile-time error if the compile-time declaration is
+<code>abstract</code>.</p></li>
+<li><p>It is a compile-time error if the method invocation occurs in a
+static context <strong>or in a pre-construction
+context</strong>.</p></li>
+</ul></li>
+<li><p>If the form is <em>TypeName</em> <code>.</code>
+<code>super</code> <code>.</code> <em>[TypeArguments]</em>
+<em>Identifier</em>, then:</p>
+<ul>
+<li><p>It is a compile-time error if the compile-time declaration is
+<code>abstract</code>.</p></li>
+<li><p>It is a compile-time error if the method invocation occurs in a
+static context <strong>or in a pre-construction
+context</strong>.</p></li>
+<li><p>If <em>TypeName</em> denotes a class <em>C</em>, then if the
+class or interface declaration immediately enclosing the method
+invocation is not <em>C</em> or an inner class of <em>C</em>, a
+compile-time error occurs.</p></li>
+<li><p>If <em>TypeName</em> denotes an interface, let <em>E</em> be the
+class or interface declaration immediately enclosing the method
+invocation. A compile-time error occurs if there exists a method,
+distinct from the compile-time declaration, that overrides (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-9.html#jls-9.4.1">9.4.1</a>)
+the compile-time declaration from a direct superclass or direct
+superinterface of <em>E</em>.</p>
+<blockquote>
+<p>In the case that a superinterface overrides a method declared in a
+grandparent interface, this rule prevents the child interface from
+"skipping" the override by simply adding the grandparent to its list of
+direct superinterfaces. The appropriate way to access functionality of a
+grandparent is through the direct superinterface, and only if that
+interface chooses to expose the desired behavior. (Alternately, the
+programmer is free to define an additional superinterface that exposes
+the desired behavior with a <code>super</code> method invocation.)</p>
+</blockquote></li>
+</ul></li>
+</ul>
+<p>The <em>compile-time parameter types</em> and <em>compile-time
+result</em> are determined as follows:</p>
+<ul>
+<li><p>If the compile-time declaration for the method invocation is
+<em>not</em> a signature polymorphic method, then:</p>
+<ul>
+<li><p>The compile-time parameter types are the types of the formal
+parameters of the compile-time declaration.</p></li>
+<li><p>The compile-time result is the result of the invocation type of
+the compile-time declaration (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12.2.6">15.12.2.6</a>).</p></li>
+</ul></li>
+<li><p>If the compile-time declaration for the method invocation is a
+signature polymorphic method, then:</p>
+<ul>
+<li><p>The compile-time parameter types are the types of the actual
+argument expressions. An argument expression which is the null literal
+<code>null</code> (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-3.html#jls-3.10.8">3.10.8</a>)
+is treated as having the type <code>Void</code>.</p></li>
+<li><p>The compile-time result is determined as follows:</p>
+<ul>
+<li><p>If the signature polymorphic method is either <code>void</code>
+or has a return type other than <code>Object</code>, the compile-time
+result is the result of the invocation type of the compile-time
+declaration (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12.2.6">15.12.2.6</a>).</p></li>
+<li><p>Otherwise, if the method invocation expression is an expression
+statement, the compile-time result is <code>void</code>.</p></li>
+<li><p>Otherwise, if the method invocation expression is the operand of
+a cast expression (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.16">15.16</a>),
+the compile-time result is the erasure of the type of the cast
+expression (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-4.html#jls-4.6">4.6</a>).</p></li>
+<li><p>Otherwise, the compile-time result is the signature polymorphic
+method's return type, <code>Object</code>.</p></li>
+</ul></li>
+</ul></li>
+</ul>
+<p>A method is <em>signature polymorphic</em> if all of the following
+are true:</p>
+<ul>
+<li><p>It is declared in the <code>java.lang.invoke.MethodHandle</code>
+class or the <code>java.lang.invoke.VarHandle</code> class.</p></li>
+<li><p>It has a single variable arity parameter (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.4.1">8.4.1</a>)
+whose declared type is <code>Object[]</code>.</p></li>
+<li><p>It is <code>native</code>.</p></li>
+</ul>
+<p>The following compile-time information is then associated with the
+method invocation for use at run time:</p>
+<ul>
+<li><p>The name of the method.</p></li>
+<li><p>The qualifying class or interface of the method invocation (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-13.html#jls-13.1">13.1</a>).</p></li>
+<li><p>The number of parameters and the compile-time parameter types, in
+order.</p></li>
+<li><p>The compile-time result.</p></li>
+<li><p>The invocation mode, computed as follows:</p>
+<ul>
+<li><p>If the compile-time declaration has the <code>static</code>
+modifier, then the invocation mode is <code>static</code>.</p></li>
+<li><p>Otherwise, if the part of the method invocation before the left
+parenthesis is of the form <code>super</code> <code>.</code>
+<em>Identifier</em> or of the form <em>TypeName</em> <code>.</code>
+<code>super</code> <code>.</code> <em>Identifier</em>, then the
+invocation mode is <code>super</code>.</p></li>
+<li><p>Otherwise, if the qualifying class or interface of the method
+invocation is in fact an interface, then the invocation mode is
+<code>interface</code>.</p></li>
+<li><p>Otherwise, the invocation mode is <code>virtual</code>.</p></li>
+</ul></li>
+</ul>
+<p>If the result of the invocation type of the compile-time declaration
+is not <code>void</code>, then the type of the method invocation
+expression is obtained by applying capture conversion (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-5.html#jls-5.1.10">5.1.10</a>)
+to the return type of the invocation type of the compile-time
+declaration.</p>
+<h3 id="jls-15.13">15.13 Method Reference Expressions</h3>
+<p>A method reference expression is used to refer to the invocation of a
+method without actually performing the invocation. Certain forms of
+method reference expression also allow class instance creation (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.9">15.9</a>)
+or array creation (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.10">15.10</a>)
+to be treated as if it were a method invocation.</p>
+<dl>
+<dt><em>MethodReference:</em></dt>
+<dd>
+<em>ExpressionName</em> <code>::</code> [<em>TypeArguments</em>]
+<em>Identifier</em>
+</dd>
+<dd>
+<em>Primary</em> <code>::</code> [<em>TypeArguments</em>]
+<em>Identifier</em>
+</dd>
+<dd>
+<em>ReferenceType</em> <code>::</code> [<em>TypeArguments</em>]
+<em>Identifier</em>
+</dd>
+<dd>
+<code>super</code> <code>::</code> [<em>TypeArguments</em>]
+<em>Identifier</em>
+</dd>
+<dd>
+<em>TypeName</em> <code>.</code> <code>super</code> <code>::</code>
+[<em>TypeArguments</em>] <em>Identifier</em>
+</dd>
+<dd>
+<em>ClassType</em> <code>::</code> [<em>TypeArguments</em>]
+<code>new</code>
+</dd>
+<dd>
+<em>ArrayType</em> <code>::</code> <code>new</code>
+</dd>
+</dl>
+<p>If <em>TypeArguments</em> is present to the right of <code>::</code>,
+then it is a compile-time error if any of the type arguments are
+wildcards (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-4.html#jls-4.5.1">4.5.1</a>).</p>
+<p>If a method reference expression has the form <em>ExpressionName</em>
+<code>::</code> <em>[TypeArguments]</em> <em>Identifier</em> or
+<em>Primary</em> <code>::</code> <em>[TypeArguments]</em>
+<em>Identifier</em>, it is a compile-time error if the type of the
+<em>ExpressionName</em> or <em>Primary</em> is not a reference type.</p>
+<p>If a method reference expression has the form <code>super</code>
+<code>::</code> <em>[TypeArguments]</em> <em>Identifier</em>, let
+<em>E</em> be the class or interface declaration immediately enclosing
+the method reference expression. It is a compile-time error if
+<em>E</em> is the class <code>Object</code> or if <em>E</em> is an
+interface.</p>
+<p>If a method reference expression has the form <em>TypeName</em>
+<code>.</code> <code>super</code> <code>::</code>
+<em>[TypeArguments]</em> <em>Identifier</em>, then:</p>
+<ul>
+<li><p>If <em>TypeName</em> denotes a class, <em>C</em>, then it is a
+compile-time error if <em>C</em> is not a lexically enclosing class of
+the current class, or if <em>C</em> is the class
+<code>Object</code>.</p></li>
+<li><p>If <em>TypeName</em> denotes an interface, <em>I</em>, then let
+<em>E</em> be the class or interface declaration immediately enclosing
+the method reference expression. It is a compile-time error if
+<em>I</em> is not a direct superinterface of <em>E</em>, or if there
+exists some other direct superclass or direct superinterface of
+<em>E</em>, <em>J</em>, such that <em>J</em> is a subclass or
+subinterface of <em>I</em>.</p></li>
+<li><p>If <em>TypeName</em> denotes a type variable, then a compile-time
+error occurs.</p></li>
+</ul>
+<p>If a method reference expression has the form <code>super</code>
+<code>::</code> <em>[TypeArguments]</em> <em>Identifier</em> or
+<em>TypeName</em> <code>.</code> <code>super</code> <code>::</code>
+<em>[TypeArguments]</em> <em>Identifier</em>, it is a compile-time error
+if the expression occurs in a static context (<a
+href="#jls-8.1.3">8.1.3</a>) <strong>or in a pre-construction context
+(<a href="#jls-8.8.7.1">8.8.7.1</a>)</strong>.</p>
+<p>If a method reference expression has the form <em>ClassType</em>
+<code>::</code> <em>[TypeArguments]</em> <code>new</code>, then:</p>
+<ul>
+<li><p><em>ClassType</em> must name a class that is accessible (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-6.html#jls-6.6">6.6</a>),
+non-<code>abstract</code>, and not an enum class, or a compile-time
+error occurs.</p></li>
+<li><p>If <em>ClassType</em> denotes a parameterized type (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-4.html#jls-4.5">4.5</a>),
+then it is a compile-time error if any of its type arguments are
+wildcards.</p></li>
+<li><p>If <em>ClassType</em> denotes a raw type (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-4.html#jls-4.8">4.8</a>),
+then it is a compile-time error if <em>TypeArguments</em> is present
+after the <code>::</code>.</p></li>
+</ul>
+<p>If a method reference expression has the form <em>ArrayType</em>
+<code>::</code> <code>new</code>, then <em>ArrayType</em> must denote a
+type that is reifiable (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-4.html#jls-4.7">4.7</a>),
+or a compile-time error occurs.</p>
+<p>The target reference of an instance method (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12.4.1">15.12.4.1</a>)
+may be provided by the method reference expression using an
+<em>ExpressionName</em>, a <em>Primary</em>, or <code>super</code>, or
+it may be provided later when the method is invoked. The immediately
+enclosing instance of a new inner class instance (<a
+href="#jls-15.9.2">15.9.2</a>) is provided by a lexically enclosing
+instance of <code>this</code> (<a href="#jls-8.1.3">8.1.3</a>).</p>
+<p>When more than one member method of a type has the same name, or when
+a class has more than one constructor, the appropriate method or
+constructor is selected based on the functional interface type targeted
+by the method reference expression, as specified in <a
+href="#jls-15.13.1">15.13.1</a>.</p>
+<p>If a method or constructor is generic, the appropriate type arguments
+may either be inferred or provided explicitly. Similarly, the type
+arguments of a generic type mentioned by the method reference expression
+may be provided explicitly or inferred.</p>
+<p>Method reference expressions are always poly expressions (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.2">15.2</a>).</p>
+<p>It is a compile-time error if a method reference expression occurs in
+a program in someplace other than an assignment context (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-5.html#jls-5.2">5.2</a>),
+an invocation context (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-5.html#jls-5.3">5.3</a>),
+or a casting context (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-5.html#jls-5.5">5.5</a>).</p>
+<p>Evaluation of a method reference expression produces an instance of a
+functional interface type (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-9.html#jls-9.8">9.8</a>).
+This does <em>not</em> cause the execution of the corresponding method;
+instead, the execution may occur at a later time when an appropriate
+method of the functional interface is invoked.</p>
+<blockquote>
+<p>Here are some method reference expressions, first with no target
+reference and then with a target reference:</p>
+<pre><code>String::length             // instance method
+System::currentTimeMillis  // static method
+List&lt;String&gt;::size  // explicit type arguments for generic type
+List::size          // inferred type arguments for generic type
+int[]::clone
+T::tvarMember
+
+System.out::println
+&quot;abc&quot;::length
+foo[x]::bar
+(test ? list.replaceAll(String::trim) : list) :: iterator
+super::toString</code></pre>
+<p>Here are some more method reference expressions:</p>
+<pre><code>String::valueOf       // overload resolution needed
+Arrays::sort          // type arguments inferred from context
+Arrays::&lt;String&gt;sort  // explicit type arguments</code></pre>
+<p>Here are some method reference expressions that represent a deferred
+creation of an object or an array:</p>
+<pre><code>ArrayList&lt;String&gt;::new     // constructor for parameterized type
+ArrayList::new             // inferred type arguments
+                           // for generic class
+Foo::&lt;Integer&gt;new          // explicit type arguments
+                           // for generic constructor
+Bar&lt;String&gt;::&lt;Integer&gt;new  // generic class, generic constructor
+Outer.Inner::new           // inner class constructor
+int[]::new                 // array creation</code></pre>
+</blockquote>
+<blockquote>
+<p>It is not possible to specify a particular signature to be matched,
+for example, <code>Arrays::sort(int[])</code>. Instead, the functional
+interface provides argument types that are used as input to the overload
+resolution algorithm (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12.2">15.12.2</a>).
+This should satisfy the vast majority of use cases; when the rare need
+arises for more precise control, a lambda expression can be used.</p>
+</blockquote>
+<blockquote>
+<p>The use of type argument syntax in the class name before a delimiter
+(<code>List&lt;String&gt;::size</code>) raises the parsing problem of
+distinguishing between <code>&lt;</code> as a type argument bracket and
+<code>&lt;</code> as a less-than operator. In theory, this is no worse
+than allowing type arguments in cast expressions; however, the
+difference is that the cast case only comes up when a <code>(</code>
+token is encountered; with the addition of method reference expressions,
+the start of <em>every</em> expression is potentially a parameterized
+type.</p>
+</blockquote>
+<h4 id="jls-15.13.1">15.13.1 Compile-Time Declaration of a Method
+Reference</h4>
+<p>The <em>compile-time declaration</em> of a method reference
+expression is the method to which the expression refers. In special
+cases, the compile-time declaration does not actually exist, but is a
+notional method that represents a class instance creation or an array
+creation. The choice of compile-time declaration depends on a function
+type targeted by the expression, just as the compile-time declaration of
+a method invocation depends on the invocation's arguments (<a
+href="#jls-15.12.3">15.12.3</a>).</p>
+<p>The search for a compile-time declaration mirrors the process for
+method invocations in <a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12.1">15.12.1</a>
+and <a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12.2">15.12.2</a>,
+as follows:</p>
+<ul>
+<li><p>First, a type to search is determined:</p>
+<ul>
+<li><p>If the method reference expression has the form
+<em>ExpressionName</em> <code>::</code> <em>[TypeArguments]</em>
+<em>Identifier</em> or <em>Primary</em> <code>::</code>
+<em>[TypeArguments]</em> <em>Identifier</em>, the type to search is the
+type of the expression preceding the <code>::</code> token.</p></li>
+<li><p>If the method reference expression has the form
+<em>ReferenceType</em> <code>::</code> <em>[TypeArguments]</em>
+<em>Identifier</em>, the type to search is the result of capture
+conversion (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-5.html#jls-5.1.10">5.1.10</a>)
+applied to <em>ReferenceType</em>.</p></li>
+<li><p>If the method reference expression has the form
+<code>super</code> <code>::</code> <em>[TypeArguments]</em>
+<em>Identifier</em>, the type to search is the superclass type of the
+immediately enclosing class or interface declaration of the method
+reference expression.</p>
+<p>Let <em>T</em> be the class or interface declaration immediately
+enclosing the method reference expression. It is a compile-time error if
+<em>T</em> is the class <code>Object</code> or an interface.</p></li>
+<li><p>If the method reference expression has the form <em>TypeName</em>
+<code>.</code> <code>super</code> <code>::</code>
+<em>[TypeArguments]</em> <em>Identifier</em>, then if <em>TypeName</em>
+denotes a class, the type to search is the superclass type of the named
+class; otherwise, <em>TypeName</em> denotes an interface to search.</p>
+<p>It is a compile-time error if <em>TypeName</em> is neither a
+lexically enclosing class or interface declaration of the method
+reference expression, nor a direct superinterface of the immediately
+enclosing class or interface declaration of the method reference
+expression.</p>
+<p>It is a compile-time error if <em>TypeName</em> is the class
+Object.</p>
+<p>It is a compile-time error if <em>TypeName</em> is an interface, and
+there exists some other direct superclass or direct superinterface of
+the immediately enclosing class or interface declaration of the method
+reference expression, <em>J</em>, such that <em>J</em> is a subclass or
+subinterface of <em>TypeName</em>.</p></li>
+<li><p>For the two other forms (involving <code>::</code>
+<code>new</code>), the referenced method is notional and there is no
+type to search.</p></li>
+</ul></li>
+<li><p>Second, given a targeted function type with <em>n</em>
+parameters, a set of potentially applicable methods is identified:</p>
+<ul>
+<li><p>If the method reference expression has the form
+<em>ReferenceType</em> <code>::</code> <em>[TypeArguments]</em>
+<em>Identifier</em>, then the potentially applicable methods are:</p>
+<ul>
+<li><p>the member methods of the type to search that would be
+potentially applicable (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12.2.1">15.12.2.1</a>)
+for a method invocation which names <em>Identifier</em>, has arity
+<em>n</em>, has type arguments <em>TypeArguments</em>, and appears in
+the same class as the method reference expression; plus</p></li>
+<li><p>the member methods of the type to search that would be
+potentially applicable for a method invocation which names
+<em>Identifier</em>, has arity <em>n</em>-1, has type arguments
+<em>TypeArguments</em>, and appears in the same class as the method
+reference expression.</p></li>
+</ul>
+<blockquote>
+<p>Two different arities, <em>n</em> and <em>n</em>-1, are considered,
+to account for the possibility that this form refers to either a
+<code>static</code> method or an instance method.</p>
+</blockquote></li>
+<li><p>If the method reference expression has the form
+<em>ClassType</em> <code>::</code> <em>[TypeArguments]</em>
+<code>new</code>, then the potentially applicable methods are a set of
+notional methods corresponding to the constructors of
+<em>ClassType</em>.</p>
+<p>If <em>ClassType</em> is a raw type, but is not a
+non-<code>static</code> member type of a raw type, the candidate
+notional member methods are those specified in <a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.9.3">15.9.3</a>
+for a class instance creation expression that uses <code>&lt;&gt;</code>
+to elide the type arguments to a class. Otherwise, the candidate
+notional member methods are the constructors of <em>ClassType</em>,
+treated as if they were methods with return type <em>ClassType</em>.</p>
+<p>Among these candidates, the potentially applicable methods are the
+notional methods that would be potentially applicable for a method
+invocation which has arity <em>n</em>, has type arguments
+<em>TypeArguments</em>, and appears in the same class as the method
+reference expression.</p></li>
+<li><p>If the method reference expression has the form
+<em>ArrayType</em> <code>::</code> <code>new</code>, a single notional
+method is considered. The method has a single parameter of type
+<code>int</code>, returns the <em>ArrayType</em>, and has no
+<code>throws</code> clause. If <em>n</em> = 1, this is the only
+potentially applicable method; otherwise, there are no potentially
+applicable methods.</p></li>
+<li><p>For all other forms, the potentially applicable methods are the
+member methods of the type to search that would be potentially
+applicable for a method invocation which names <em>Identifier</em>, has
+arity <em>n</em>, has type argument <em>TypeArguments</em>, and appears
+in the same class as the method reference expression.</p></li>
+</ul></li>
+<li><p>Finally, if there are no potentially applicable methods, then
+there is no compile-time declaration.</p>
+<p>Otherwise, given a targeted function type with parameter types
+<em>P<sub>1</sub></em>, ..., <em>P<sub>n</sub></em> and a set of
+potentially applicable methods, the compile-time declaration is selected
+as follows:</p>
+<ul>
+<li><p>If the method reference expression has the form
+<em>ReferenceType</em> <code>::</code> <em>[TypeArguments]</em>
+<em>Identifier</em>, then two searches for a most specific applicable
+method are performed. Each search is as specified in <a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12.2.2">15.12.2.2</a>
+through <a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12.2.5">15.12.2.5</a>,
+with the clarifications below. Each search produces a set of applicable
+methods and, possibly, designates a most specific method of the set. In
+the case of an error as specified in <a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12.2.4">15.12.2.4</a>,
+the set of applicable methods is empty. In the case of an error as
+specified in <a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12.2.5">15.12.2.5</a>,
+there is no most specific method.</p>
+<p>In the first search, the method reference is treated as if it were an
+invocation with argument expressions of types <em>P<sub>1</sub></em>,
+..., <em>P<sub>n</sub></em>. Type arguments, if any, are given by the
+method reference expression.</p>
+<p>In the second search, if <em>P<sub>1</sub></em>, ...,
+<em>P<sub>n</sub></em> is not empty and <em>P<sub>1</sub></em> is a
+subtype of <em>ReferenceType</em>, then the method reference expression
+is treated as if it were a method invocation expression with argument
+expressions of types <em>P<sub>2</sub></em>, ...,
+<em>P<sub>n</sub></em>. If <em>ReferenceType</em> is a raw type, and
+there exists a parameterization of this type,
+<em>G</em><code>&lt;</code>...<code>&gt;</code>, that is a supertype of
+<em>P<sub>1</sub></em>, the type to search is the result of capture
+conversion (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-5.html#jls-5.1.10">5.1.10</a>)
+applied to <em>G</em><code>&lt;</code>...<code>&gt;</code>; otherwise,
+the type to search is the same as the type of the first search. Type
+arguments, if any, are given by the method reference expression.</p>
+<p>If the first search produces a most specific method that is
+<code>static</code>, and the set of applicable methods produced by the
+second search contains no non-<code>static</code> methods, then the
+compile-time declaration is the most specific method of the first
+search.</p>
+<p>Otherwise, if the set of applicable methods produced by the first
+search contains no <code>static</code> methods, and the second search
+produces a most specific method that is non-<code>static</code>, then
+the compile-time declaration is the most specific method of the second
+search.</p>
+<p>Otherwise, there is no compile-time declaration.</p></li>
+<li><p>For all other forms of method reference expression, one search
+for a most specific applicable method is performed. The search is as
+specified in <a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12.2.2">15.12.2.2</a>
+through <a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12.2.5">15.12.2.5</a>,
+with the clarifications below.</p>
+<p>The method reference is treated as if it were an invocation with
+argument expressions of types <em>P<sub>1</sub></em>, ...,
+<em>P<sub>n</sub></em>; the type arguments, if any, are given by the
+method reference expression.</p>
+<p>If the search results in an error as specified in <a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12.2.2">15.12.2.2</a>
+through <a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12.2.5">15.12.2.5</a>,
+or if the most specific applicable method is <code>static</code>, there
+is no compile-time declaration.</p>
+<p>Otherwise, the compile-time declaration is the most specific
+applicable method.</p></li>
+</ul></li>
+</ul>
+<p>It is a compile-time error if a method reference expression has the
+form <em>ReferenceType</em> <code>::</code> <em>[TypeArguments]</em>
+<em>Identifier</em>, and the compile-time declaration is
+<code>static</code>, and <em>ReferenceType</em> is not a simple or
+qualified name (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-6.html#jls-6.2">6.2</a>).</p>
+<p>It is a compile-time error if the method reference expression has the
+form <code>super</code> <code>::</code> <em>[TypeArguments]</em>
+<em>Identifier</em> or <em>TypeName</em> <code>.</code>
+<code>super</code> <code>::</code> <em>[TypeArguments]</em>
+<em>Identifier</em>, and the compile-time declaration is
+<code>abstract</code>.</p>
+<p>It is a compile-time error if the method reference expression has the
+form <code>super</code> <code>::</code> <em>[TypeArguments]</em>
+<em>Identifier</em> or <em>TypeName</em> <code>.</code>
+<code>super</code> <code>::</code> <em>[TypeArguments]</em>
+<em>Identifier</em>, and the method reference expression occurs in a
+static context (<a href="#jls-8.1.3">8.1.3</a>) <strong>or in a
+pre-construction context (<a
+href="#jls-8.8.7.1">8.8.7.1</a>)</strong>.</p>
+<p>It is a compile-time error if the method reference expression has the
+form <em>TypeName</em> <code>.</code> <code>super</code> <code>::</code>
+<em>[TypeArguments]</em> <em>Identifier</em>, and <em>TypeName</em>
+denotes a class <em>C</em>, and the immediately enclosing class or
+interface declaration of the method reference expression is not
+<em>C</em> or an inner class of <em>C</em>.</p>
+<p>It is a compile-time error if the method reference expression has the
+form <em>TypeName</em> <code>.</code> <code>super</code> <code>::</code>
+<em>[TypeArguments]</em> <em>Identifier</em>, and <em>TypeName</em>
+denotes an interface, and there exists a method, distinct from the
+compile-time declaration, that overrides the compile-time declaration
+from a direct superclass or direct superinterface of the class or
+interface whose declaration immediately encloses the method reference
+expression (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.4.8">8.4.8</a>,
+<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-9.html#jls-9.4.1">9.4.1</a>).</p>
+<p>It is a compile-time error if the method reference expression is of
+the form <em>ClassType</em> <code>::</code> <em>[TypeArguments]</em>
+<code>new</code> and a compile-time error would occur when determining
+an enclosing instance for <em>ClassType</em> as specified in <a
+href="#jls-15.9.2">15.9.2</a> (treating the method reference expression
+as if it were an unqualified class instance creation expression).</p>
+<blockquote>
+<p>A method reference expression of the form <em>ReferenceType</em>
+<code>::</code> <em>[TypeArguments]</em> <em>Identifier</em> can be
+interpreted in different ways. If <em>Identifier</em> refers to an
+instance method, then the implicit lambda expression has an extra
+parameter compared to if <em>Identifier</em> refers to a
+<code>static</code> method. It is possible for <em>ReferenceType</em> to
+have both kinds of applicable methods, so the search algorithm described
+above identifies them separately, since there are different parameter
+types for each case.</p>
+</blockquote>
+<blockquote>
+<p>An example of ambiguity is:</p>
+</blockquote>
+<blockquote>
+<pre><code>interface Fun&lt;T,R&gt; { R apply(T arg); }
+
+class C {
+    int size() { return 0; }
+    static int size(Object arg) { return 0; }
+
+    void test() {
+        Fun&lt;C, Integer&gt; f1 = C::size;
+          // Error: instance method size()
+          // or static method size(Object)?
+    }
+}</code></pre>
+</blockquote>
+<blockquote>
+<p>This ambiguity cannot be resolved by providing an applicable instance
+method which is more specific than an applicable <code>static</code>
+method:</p>
+</blockquote>
+<blockquote>
+<pre><code>interface Fun&lt;T,R&gt; { R apply(T arg); }
+
+class C {
+    int size() { return 0; }
+    static int size(Object arg) { return 0; }
+    int size(C arg) { return 0; }
+
+    void test() {
+        Fun&lt;C, Integer&gt; f1 = C::size;
+          // Error: instance method size()
+          // or static method size(Object)?
+    }
+}</code></pre>
+</blockquote>
+<blockquote>
+<p>The search is smart enough to ignore ambiguities in which all the
+applicable methods (from both searches) are instance methods:</p>
+</blockquote>
+<blockquote>
+<pre><code>interface Fun&lt;T,R&gt; { R apply(T arg); }
+
+class C {
+    int size() { return 0; }
+    int size(Object arg) { return 0; }
+    int size(C arg) { return 0; }
+
+    void test() {
+        Fun&lt;C, Integer&gt; f1 = C::size;
+          // OK: reference is to instance method size()
+    }
+}</code></pre>
+</blockquote>
+<blockquote>
+<p>For convenience, when the name of a generic type is used to refer to
+an instance method (where the receiver becomes the first parameter), the
+target type is used to determine the type arguments. This facilitates
+usage like <code>Pair::first</code> in place of
+<code>Pair&lt;String,Integer&gt;::first</code>. Similarly, a method
+reference like <code>Pair::new</code> is treated like a "diamond"
+instance creation (<code>new Pair&lt;&gt;()</code>). Because the
+"diamond" is implicit, this form does <em>not</em> instantiate a raw
+type; in fact, there is no way to express a reference to the constructor
+of a raw type.</p>
+</blockquote>
+<p>For some method reference expressions, there is only one possible
+compile-time declaration with only one possible invocation type (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-15.html#jls-15.12.2.6">15.12.2.6</a>),
+regardless of the targeted function type. Such method reference
+expressions are said to be <em>exact</em>. A method reference expression
+that is not exact is said to be <em>inexact</em>.</p>
+<p>A method reference expression ending with <em>Identifier</em> is
+exact if it satisfies all of the following:</p>
+<ul>
+<li><p>If the method reference expression has the form
+<em>ReferenceType</em> <code>::</code> <em>[TypeArguments]</em>
+<em>Identifier</em>, then <em>ReferenceType</em> does not denote a raw
+type.</p></li>
+<li><p>The type to search has exactly one member method with the name
+<em>Identifier</em> that is accessible to the class or interface in
+which the method reference expression appears.</p></li>
+<li><p>This method is not variable arity (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.4.1">8.4.1</a>).</p></li>
+<li><p>If this method is generic (<a
+href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.4.4">8.4.4</a>),
+then the method reference expression provides
+<em>TypeArguments</em>.</p></li>
+</ul>
+<p>A method reference expression of the form <em>ClassType</em>
+<code>::</code> <em>[TypeArguments]</em> <code>new</code> is exact if it
+satisfies all of the following:</p>
+<ul>
+<li><p>The type denoted by <em>ClassType</em> is not raw, or is a
+non-<code>static</code> member type of a raw type.</p></li>
+<li><p>The type denoted by <em>ClassType</em> has exactly one
+constructor that is accessible to the class or interface in which the
+method reference expression appears.</p></li>
+<li><p>This constructor is not variable arity.</p></li>
+<li><p>If this constructor is generic, then the method reference
+expression provides <em>TypeArguments</em>.</p></li>
+</ul>
+<p>A method reference expression of the form <em>ArrayType</em>
+<code>::</code> <code>new</code> is always exact.</p>
+</main><footer class="legal-footer"><hr/><a href="../legal/copyright.html">Copyright</a> &copy; 1993, 2024, Oracle and/or its affiliates, 500 Oracle Parkway, Redwood Shores, CA 94065 USA.<br>All rights reserved. Use is subject to <a href="https://www.oracle.com/java/javase/terms/license/java22speclicense.html">license terms</a> and the <a href="https://www.oracle.com/technetwork/java/redist-137594.html">documentation redistribution policy</a>. <!-- Version 22.0.2+9-70 --></footer>
+</body>
+</html>
